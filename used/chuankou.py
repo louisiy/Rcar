@@ -3,7 +3,7 @@ from maix import camera, display, pinmap, uart, app, time
 import threading
 
 stuts0  = ""
-stuts1  = ""  
+stuts1  = ""
 
 #摄像头初始化
 cam = camera.Camera(1024, 960)
@@ -13,8 +13,8 @@ def re_uart (serial) :
     global stuts0, stuts1, serial0, serial1
     while 1:
         # 串口  接收数据
-        data = serial.read() 
-        data = data.decode("utf-8",errors="ignore")
+        data =serial.read()
+        data =  data.decode("utf-8",errors="ignore")
         if data != "" and serial == serial0:  #串口0 赋值
          #   print(data)
             stuts0  = data

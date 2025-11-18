@@ -4,41 +4,61 @@
 
 MaixCam视觉+主控
 
-底盘小车
+车座 ESP32
+
+- 通过UART直连MaixCam
 
 机械臂
 
+- TCP转UART直连MaixCam
 
+移液枪（外设）
 
-## 底盘小车
+- ESP32-C3，5V供电，驱动舵机，WIFI与MaixCam连接
 
-### 模块
+天平（外设）
 
-#### `main.py`
+- 待确认串口形式，但通过ESP32-C3转WIFI与MaixCam连接
 
-主程序入口
+搅拌电机（外设）
 
-#### `pwm.py`
+- 待确认串口形式，但通过ESP32-C3转WIFI与MaixCam连接
 
-pwm控制器类
+## 组成部分
 
-#### `ps2.py`
-```python
-#CMD_READ_TYPE=[0x01, 0x45, 0x00, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A]
-CMD_SET_MODE=[0x01, 0x44, 0x00, 0x01, 0x03, 0x00, 0x00, 0x00, 0x00]
-# 4th byte: 00 normal; 01 red or analog
-# 5th byte: 03 lock; ee no lock
-```
-## 视觉、主控
+### MaixCam
 
-### 视觉
+apriltag识别
 
-### 通信
+YOLOv5识别
 
+串口监听
 
+WIFI热点AP模式
 
+### 车座
 
+pwm电机驱动
 
+ps2手柄控制
+
+循迹控制
+
+超声探距
+
+串口发送
+
+### 机械臂
+
+不同任务的姿态点记录
+
+姿态点间的移动
+
+通信
+
+### ESP32-C3
+
+外设通信
 
 
 https://www.nologo.tech/product/esp32/esp32c3/esp32c3supermini/esp32C3SuperMini.html
