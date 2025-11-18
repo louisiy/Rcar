@@ -20,6 +20,8 @@ dt = yolo.YOLOHANDLER()
 
 while not app.need_exit():
     img = cam.read()
+
     img = at.search(img)
     img = dt.search(img)
+
     dis.show(img)
