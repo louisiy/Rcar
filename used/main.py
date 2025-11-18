@@ -2,19 +2,19 @@ from maix import camera, display, image, app, pinmap, uart, app, time
 import threading
 
 i = 0
-thresholds = [[0,100,-20,-10,60,80]] 
+thresholds = [[0,100,-20,-10,60,80]]
 
 def re_uart (serial) :
     global stuts0, stuts1, serial0, serial1
     while 1:
-        # 串口  接收数据
-        data = serial.read() 
+
+        data = serial.read()
         data = data.decode("utf-8",errors="ignore")
-        if data != "" and serial == serial0:  #串口0 赋值
+        if data != "" and serial == serial0:
          #   print(data)
             stuts0  = data
             data    = ""
-        if data != "" and serial == serial1:  #串口1 赋值
+        if data != "" and serial == serial1:
             stuts1  = data
             data    = ""
 
