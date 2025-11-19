@@ -1,7 +1,8 @@
-from maix import app,camera,display,nn,pinmap
+from maix import app,camera,display,pinmap
 import uart
 import atag
 import yolo
+import wifi
 
 cam = camera.Camera(640,480)
 dis = display.Display()
@@ -16,12 +17,16 @@ u2.listen()
 
 at = atag.ATAGHANDLER()
 
-dt = yolo.YOLOHANDLER()
+#dt = yolo.YOLOHANDLER()
 
+ap = wifi.WIFIHANDLER()
+
+ap.start()
 while not app.need_exit():
     img = cam.read()
 
     img = at.search(img)
-    img = dt.search(img)
+    #img = dt.search(img)
 
     dis.show(img)
+ap.stop()
