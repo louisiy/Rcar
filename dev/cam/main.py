@@ -4,6 +4,7 @@ import atag
 import yolo
 import wifi
 import tcp
+import color
 
 cam = camera.Camera(640,480)
 dis = display.Display()
@@ -16,9 +17,11 @@ u2 = uart.UARTHANDLER("/dev/ttyS2")
 u0.listen()
 u2.listen()
 
-at = atag.ATAGHANDLER()
+#at = atag.ATAGHANDLER()
 
 #dt = yolo.YOLOHANDLER()
+
+ch = color.COLORHANDLER()
 
 ap = wifi.WIFIHANDLER()
 tp = tcp.TCPHANDLER()
@@ -29,7 +32,8 @@ tp.start()
 while not app.need_exit():
     img = cam.read()
 
-    img = at.search(img)
+    #img = at.search(img)
+    img = ch.search(img)
     #img = dt.search(img)
 
     dis.show(img)
