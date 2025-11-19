@@ -1,131 +1,134 @@
 '''
-    实例运动操作
+    运动操作类
 '''
 
 import setting as s
 import time
 
-class MOVE:
-    def __init__(self):
+class MOTION:
+    def __init__(self,pwms,speed = s.SPEED):
+        self.pwms = pwms
         self.up = False
         self.down = False
         self.left = False
         self.right = False
         self.tl = False
         self.tr = False
-        self.speed = s.SPEED
+        self.speed = speed
 
     def is_any_true(self):
         return any([self.up, self.down, self.left, self.right])
 
-def initial(controller):
-    controller.set_duty(0,1000)
-    controller.set_duty(1,1000)
-    controller.set_duty(2,1000)
-    controller.set_duty(3,1000)
-    time.sleep(5)
-    controller.set_duty(0,1500)
-    controller.set_duty(1,1500)
-    controller.set_duty(2,1500)
-    controller.set_duty(3,1500)
-    time.sleep(1)
+    def initial(self):
+        self.pwms.set_duty(0,1000)
+        self.pwms.set_duty(1,1000)
+        self.pwms.set_duty(2,1000)
+        self.pwms.set_duty(3,1000)
+        time.sleep(5)
+        self.pwms.set_duty(0,1500)
+        self.pwms.set_duty(1,1500)
+        self.pwms.set_duty(2,1500)
+        self.pwms.set_duty(3,1500)
+        time.sleep(1)
 
-def stop(controller):
-    controller.set_duty(0,1500)
-    controller.set_duty(1,1500)
-    controller.set_duty(2,1500)
-    controller.set_duty(3,1500)
-    print("stop")
+    def stop(self):
+        self.pwms.set_duty(0,1500)
+        self.pwms.set_duty(1,1500)
+        self.pwms.set_duty(2,1500)
+        self.pwms.set_duty(3,1500)
+        print("stop")
 
-def straight(controller,speed):
-    controller.set_duty(0,1500+speed)
-    controller.set_duty(1,1500-speed)
-    controller.set_duty(2,1500+speed)
-    controller.set_duty(3,1500-speed)
-    if speed > 0:
-        print("move forward")
-    elif speed < 0:
-        print("move backward")
+    def straight(self,speed):
+        self.pwms.set_duty(0,1500+speed)
+        self.pwms.set_duty(1,1500-speed)
+        self.pwms.set_duty(2,1500+speed)
+        self.pwms.set_duty(3,1500-speed)
+        if speed > 0:
+            print("move forward")
+        elif speed < 0:
+            print("move backward")
 
-def turn(controller,speed):
-    controller.set_duty(0,1500-speed)
-    controller.set_duty(1,1500-speed)
-    controller.set_duty(2,1500-speed)
-    controller.set_duty(3,1500-speed)
-    if speed > 0:
-        print("turn left")
-    elif speed < 0:
-        print("turn right")
+    def turn(self,speed):
+        self.pwms.set_duty(0,1500-speed)
+        self.pwms.set_duty(1,1500-speed)
+        self.pwms.set_duty(2,1500-speed)
+        self.pwms.set_duty(3,1500-speed)
+        if speed > 0:
+            print("turn left")
+        elif speed < 0:
+            print("turn right")
 
-def side(controller,speed):
-    controller.set_duty(0,1500-speed)
-    controller.set_duty(1,1500-speed)
-    controller.set_duty(2,1500+speed)
-    controller.set_duty(3,1500+speed)
-    if speed > 0:
-        print("move left")
-    elif speed < 0:
-        print("move right")
+    def side(self,speed):
+        self.pwms.set_duty(0,1500-speed)
+        self.pwms.set_duty(1,1500-speed)
+        self.pwms.set_duty(2,1500+speed)
+        self.pwms.set_duty(3,1500+speed)
+        if speed > 0:
+            print("move left")
+        elif speed < 0:
+            print("move right")
 
-def slash(controller,speed,direction):
-    controller.set_duty(0,1500+speed*direction)
-    controller.set_duty(1,1500-speed*(1-direction))
-    controller.set_duty(2,1500+speed*(1-direction))
-    controller.set_duty(3,1500-speed*direction)
-    if speed > 0 and not direction:
-        print("move forward left")
-    elif speed < 0 and not direction:
-        print("move backward right")
-    elif speed > 0 and direction:
-        print("move forward right")
-    elif speed < 0 and direction:
-        print("move backward left")
+    def slash(self,speed,direction):
+        self.pwms.set_duty(0,1500+speed*direction)
+        self.pwms.set_duty(1,1500-speed*(1-direction))
+        self.pwms.set_duty(2,1500+speed*(1-direction))
+        self.pwms.set_duty(3,1500-speed*direction)
+        if speed > 0 and not direction:
+            print("move forward left")
+        elif speed < 0 and not direction:
+            print("move backward right")
+        elif speed > 0 and direction:
+            print("move forward right")
+        elif speed < 0 and direction:
+            print("move backward left")
 
-def joystick(controller,speed_1,speed_2):
-    controller.set_duty(0,1500+speed_1)
-    controller.set_duty(1,1500-speed_2)
-    controller.set_duty(2,1500+speed_1)
-    controller.set_duty(3,1500-speed_2)
-    print("Joystick")
+    def joystick(self,speed_1,speed_2):
+        self.pwms.set_duty(0,1500+speed_1)
+        self.pwms.set_duty(1,1500-speed_2)
+        self.pwms.set_duty(2,1500+speed_1)
+        self.pwms.set_duty(3,1500-speed_2)
+        print("Joystick")
 
 if __name__ == "__main__":
     import setting
     from pwm import PWMs
-    def car_test(controller):
-        straight(controller,s.SPEED)
+    def car_test():
+        mv.straight(s.SPEED)
         time.sleep(s.DELAY_TIME_S)
 
-        straight(controller,-s.SPEED)
+        mv.straight(-s.SPEED)
         time.sleep(s.DELAY_TIME_S)
 
-        turn(controller,s.SPEED)
+        mv.turn(s.SPEED)
         time.sleep(s.DELAY_TIME_S)
 
-        turn(controller,-s.SPEED)
+        mv.turn(-s.SPEED)
         time.sleep(s.DELAY_TIME_S)
 
-        side(controller,s.SPEED)
+        mv.side(s.SPEED)
         time.sleep(s.DELAY_TIME_S)
 
-        side(controller,-s.SPEED)
+        mv.side(-s.SPEED)
         time.sleep(s.DELAY_TIME_S)
 
-        slash(controller,s.SPEED,s.B)
+        mv.slash(s.SPEED,s.B)
         time.sleep(s.DELAY_TIME_S)
 
-        slash(controller,s.SPEED,s.F)
+        mv.slash(s.SPEED,s.F)
         time.sleep(s.DELAY_TIME_S)
 
-        slash(controller,-s.SPEED,s.F)
+        mv.slash(-s.SPEED,s.F)
         time.sleep(s.DELAY_TIME_S)
 
-        slash(controller,-s.SPEED,s.B)
+        mv.slash(-s.SPEED,s.B)
         time.sleep(s.DELAY_TIME_S)
 
-        stop(controller)
+        mv.stop()
         time.sleep(s.DELAY_TIME_S)
 
-    ctrl = PWMs(s.PINs, s.FREQ)
-    initial(ctrl)
+    pwms = PWMs(s.PINs, s.FREQ)
+    mv = MOTION(pwms)
+    mv.initial()
     while True:
-        car_test(ctrl)
+        car_test()
+    pwms.close()

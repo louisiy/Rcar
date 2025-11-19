@@ -1,7 +1,8 @@
 import threading
 
 class TCPHANDLER:
-    def __init__(self,
+    def __init__(
+                 self,
                  is_server=True,
                  ip="192.168.5.1",
                  port=5200,

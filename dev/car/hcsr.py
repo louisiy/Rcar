@@ -2,7 +2,7 @@
     超声波测距传感器HC-SR04
 '''
 
-import setting
+import setting as s
 import time
 from machine import Pin, time_pulse_us
 
@@ -41,7 +41,7 @@ class HC_SR04:
         return cm
 
 if __name__ == "__main__":
-    hcsr = HC_SR04(trig_pin = TRIG_PIN, echo_pin = ECHO_PIN)
+    hcsr = HC_SR04(trig_pin = s.TRIG_PIN, echo_pin = s.ECHO_PIN)
     while True:
         d = hcsr.distance_cm()
         print (f"{d:.1f} cm\n")

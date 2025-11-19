@@ -91,9 +91,6 @@ class PS2:
 
         for _ in range(10):
             self.send(s.CMD_ENTER_CONFIG)
-            # time.sleep_us(SHORT_DELAY_US)
-            # self.CMD.value(1)
-            # self.CLK.value(1)
             self.send(s.CMD_SET_MODE)
             if rumble:
                 self.send(s.CMD_ENABLE_RUMBLE)

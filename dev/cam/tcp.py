@@ -38,7 +38,7 @@ class TCPHANDLER:
                 if not data:
                     break
                 print(f"[TCPServer] Received data from {addr}: {data.decode('utf-8',errors='ignore')}")
- 
+
                 c.send(b"Data processed and received.")
         finally:
             c.close()

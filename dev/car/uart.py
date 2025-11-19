@@ -1,7 +1,7 @@
 '''
     uart端口类
 '''
-import setting
+import setting as s
 from machine import UART
 import _thread
 
@@ -10,6 +10,7 @@ class UART2:
         self.ut = UART(port,baud, bits, parity, stop)
         self.data = ""
         self.ut.write('uart2 ok!\r\n')
+        self.th = None
 
     def read(self):
         while True:
@@ -23,15 +24,19 @@ class UART2:
         self.ut.write(data)
 
     def listen(self):
-        uth = _thread.start_new_thread(self.read)
+        self.th = _thread.start_new_thread(self.read)
 
     def stop(self):
+        self.th.exit()
+
+    def close(self):
         self.ut.deinit()
 
 if __name__ == "__main__":
     import time
     uart = UART2()
     uart.send("hello world\n")
+    uart.listen()
     while True:
         msg = uart.data
         if msg:
@@ -42,4 +47,5 @@ if __name__ == "__main__":
             break
         time.sleep(0.1)
     uart.send("Bye world\n")
+    uart.stop()
     uart.close()

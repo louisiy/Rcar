@@ -6,22 +6,25 @@ import setting as s
 import time
 from pwm import PWMs
 from ps2 import PS2
-#from uart import UART2
-import motion as mn
-import remote as rm
+from uart import UART2
+import motion
+import remote
 
 def main():
-    ctrl = PWMs(s.PINs, s.FREQ)
-    mn.initial(ctrl)
-    mv = mn.MOVE()
+    pwms = PWMs(s.PINs, s.FREQ)
+    mv = motion.MOTION(pwms)
+    mv.initial()
+
     ps2 = PS2(s.DAT_PIN, s.CMD_PIN, s.SEL_PIN, s.CLK_PIN)
-    rm.initial(ps2)
-    pctrl = rm.PS2CTRL()
+    rm = remote.REMOTE(ps2)
+    rm.initial()
+
     #uart = UART2()
+
     while True:
         if not ps2.read():
             continue
-        if rm.handler(ps2,ctrl,mv,pctrl):
+        if rm.handler(ps2,pwms,mv,pctrl):
             break
         #msg = uart.poll()
 #         if msg:
@@ -31,7 +34,7 @@ def main():
 #         if msg == 'q':
 #             break
         time.sleep_ms(s.READ_DELAY_MS)
-    ctrl.close()
+    pwms.close()
 #     uart.close()
 
 if __name__ == "__main__":
