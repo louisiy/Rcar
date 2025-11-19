@@ -30,7 +30,7 @@ MaixCam视觉+主控
 
 #### 预期功能
 
-apriltag识别、YOLOv5识别、串口监听、WIFI热点AP模式、TCP通信
+apriltag识别、YOLOv5识别、颜色识别、串口监听、WIFI热点AP模式、TCP通信
 
 #### 模块代码介绍
 

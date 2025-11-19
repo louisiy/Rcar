@@ -6,7 +6,7 @@ class UARTHANDLER:
         self.ut = uart.UART(device,baudrate)
         self.data = ""
 
-    def recv(self):
+    def read(self):
         while True:
             data = self.ut.read()
             data = data.decode("utf-8",errors="ignore")
@@ -17,9 +17,9 @@ class UARTHANDLER:
         self.ut.write_str(data)
 
     def listen(self):
-        uth = threading.Thread(target=self.recv)
+        uth = threading.Thread(target=self.read)
         uth.daemon = True
         uth.start()
 
-
-
+    def stop(self):
+        self.ut.close()
