@@ -50,6 +50,10 @@ apriltag识别、YOLOv5识别、串口监听、WIFI热点AP模式、TCP通信
 
 定义了WiFi AP热点
 
+`tcp.py`
+
+定义了TCP服务器
+
 ##### 逻辑执行层
 
 `atag.py`
@@ -60,11 +64,13 @@ apriltag识别、YOLOv5识别、串口监听、WIFI热点AP模式、TCP通信
 
 定义实现了YOLOv5模型的识别
 
+`color.py`
+
+定义实现了色块识别
+
 ##### TODO
 
-希望完成TCP通信的硬件抽象层代码`socket.py`和逻辑执行层代码`device.py`
-
-希望完成颜色识别（如应用于两相界面识别）的逻辑执行层代码`color.py`
+希望完成TCP通信的逻辑执行层代码`device.py`
 
 斟酌考虑是否需要把2个UART通信、3个TCP通信封装为一个逻辑执行层
 

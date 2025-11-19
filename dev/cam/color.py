@@ -1,5 +1,4 @@
-from maix import camera, display, image
-
+from maix import image
 
 class COLORHANDLER:
     def __init__(self,
@@ -10,7 +9,7 @@ class COLORHANDLER:
         self.interval = interval
 
     def search(self,img):
-        blobs = img.find_blobs(thresholds, pixels_threshold=10)
+        blobs = img.find_blobs(self.thresholds, pixels_threshold=10)
         if blobs != []:
             for blob in blobs:
                 print(blob[0], blob[1], blob[2], blob[3])
