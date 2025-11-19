@@ -2,7 +2,7 @@
     实例运动操作
 '''
 
-import setting
+import setting as s
 import time
 
 class MOVE:
@@ -13,7 +13,7 @@ class MOVE:
         self.right = False
         self.tl = False
         self.tr = False
-        self.speed = SPEED
+        self.speed = s.SPEED
 
     def is_any_true(self):
         return any([self.up, self.down, self.left, self.right])
@@ -92,40 +92,40 @@ if __name__ == "__main__":
     import setting
     from pwm import PWMs
     def car_test(controller):
-        straight(controller,SPEED)
-        time.sleep(DELAY_TIME_S)
+        straight(controller,s.SPEED)
+        time.sleep(s.DELAY_TIME_S)
 
-        straight(controller,-SPEED)
-        time.sleep(DELAY_TIME_S)
+        straight(controller,-s.SPEED)
+        time.sleep(s.DELAY_TIME_S)
 
-        turn(controller,SPEED)
-        time.sleep(DELAY_TIME_S)
+        turn(controller,s.SPEED)
+        time.sleep(s.DELAY_TIME_S)
 
-        turn(controller,-SPEED)
-        time.sleep(DELAY_TIME_S)
+        turn(controller,-s.SPEED)
+        time.sleep(s.DELAY_TIME_S)
 
-        side(controller,SPEED)
-        time.sleep(DELAY_TIME_S)
+        side(controller,s.SPEED)
+        time.sleep(s.DELAY_TIME_S)
 
-        side(controller,-SPEED)
-        time.sleep(DELAY_TIME_S)
+        side(controller,-s.SPEED)
+        time.sleep(s.DELAY_TIME_S)
 
-        slash(controller,SPEED,B)
-        time.sleep(DELAY_TIME_S)
+        slash(controller,s.SPEED,s.B)
+        time.sleep(s.DELAY_TIME_S)
 
-        slash(controller,SPEED,F)
-        time.sleep(DELAY_TIME_S)
+        slash(controller,s.SPEED,s.F)
+        time.sleep(s.DELAY_TIME_S)
 
-        slash(controller,-SPEED,F)
-        time.sleep(DELAY_TIME_S)
+        slash(controller,-s.SPEED,s.F)
+        time.sleep(s.DELAY_TIME_S)
 
-        slash(controller,-SPEED,B)
-        time.sleep(DELAY_TIME_S)
+        slash(controller,-s.SPEED,s.B)
+        time.sleep(s.DELAY_TIME_S)
 
         stop(controller)
-        time.sleep(DELAY_TIME_S)
+        time.sleep(s.DELAY_TIME_S)
 
-    ctrl = PWMs(PINs, FREQ)
+    ctrl = PWMs(s.PINs, s.FREQ)
     initial(ctrl)
     while True:
         car_test(ctrl)

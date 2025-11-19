@@ -2,7 +2,7 @@
     PS2类
 '''
 
-import setting
+import setting as s
 from machine import Pin
 import time
 
@@ -26,20 +26,20 @@ class PS2:
         for i in range(8):
             self.CMD.value(byte & (1 << i))
             self.CLK.value(0)
-            time.sleep_us(SHORT_DELAY_US)
+            time.sleep_us(s.SHORT_DELAY_US)
 
             if self.DAT.value():
                 temp |= (1 << i)
 
             self.CLK.value(1)
-            time.sleep_us(SHORT_DELAY_US)
+            time.sleep_us(s.SHORT_DELAY_US)
         self.CMD.value(1)
-        time.sleep_us(SHORT_DELAY_US)
+        time.sleep_us(s.SHORT_DELAY_US)
         return temp
 
     def send(self, command):
         self.SEL.value(0)
-        time.sleep_us(SHORT_DELAY_US)
+        time.sleep_us(s.SHORT_DELAY_US)
         for byte in command:
             self.byte_transfer(byte)
         self.SEL.value(1)
@@ -59,7 +59,7 @@ class PS2:
             self.CMD.value(1)
             self.CLK.value(1)
             self.SEL.value(0)
-            time.sleep_us(SHORT_DELAY_US)
+            time.sleep_us(s.SHORT_DELAY_US)
 
             for i in range(9):
                 self.data[i] = self.byte_transfer(data_to_send[i])
@@ -90,19 +90,19 @@ class PS2:
         self.CLK.value(1)
 
         for _ in range(10):
-            self.send(CMD_ENTER_CONFIG)
+            self.send(s.CMD_ENTER_CONFIG)
             # time.sleep_us(SHORT_DELAY_US)
             # self.CMD.value(1)
             # self.CLK.value(1)
-            self.send(CMD_SET_MODE)
+            self.send(s.CMD_SET_MODE)
             if rumble:
-                self.send(CMD_ENABLE_RUMBLE)
+                self.send(s.CMD_ENABLE_RUMBLE)
                 self.is_rumble_enabled = True
             if pressure:
-                self.send(CMD_ENABLE_PRESSURE)
+                self.send(s.CMD_ENABLE_PRESSURE)
                 self.is_pressure_enabled = True
 
-            self.send(CMD_EXIT_CONFIG)
+            self.send(s.CMD_EXIT_CONFIG)
             self.read()
 
             if pressure and self.data[1] == 0x79:
@@ -117,24 +117,24 @@ class PS2:
         return 0
 
     def reset(self):
-        self.send(CMD_ENTER_CONFIG)
-        self.send(CMD_SET_MODE)
+        self.send(s.CMD_ENTER_CONFIG)
+        self.send(s.CMD_SET_MODE)
         if self.is_rumble_enabled:
-            self.send(CMD_ENABLE_RUMBLE)
+            self.send(s.CMD_ENABLE_RUMBLE)
         if self.is_pressure_enabled:
-            self.send(CMD_ENABLE_PRESSURE)
-        self.send(CMD_EXIT_CONFIG)
+            self.send(s.CMD_ENABLE_PRESSURE)
+        self.send(s.CMD_EXIT_CONFIG)
 
     def is_pressed(self, button_name):
-        mask = BUTTONS[button_name]
+        mask = s.BUTTONS[button_name]
         return self.last_buttons & mask and not self.buttons & mask
 
     def is_released(self, button_name):
-        mask=BUTTONS[button_name]
+        mask=s.BUTTONS[button_name]
         return not self.last_buttons & mask and self.buttons & mask
 
     def is_held(self, button_name):
-        mask=BUTTONS[button_name]
+        mask=s.BUTTONS[button_name]
         return not self.last_buttons & mask and not self.buttons & mask
 
     def get_joysticks(self, axis):

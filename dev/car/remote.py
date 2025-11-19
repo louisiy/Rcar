@@ -2,8 +2,9 @@
     ps2手柄控制
 '''
 
-import setting
+import setting as s
 import motion as mn
+import time
 
 class PS2CTRL:
     def __init__(self):
@@ -12,7 +13,7 @@ class PS2CTRL:
         self.car_mode = 0
 
 def initial(ps2):
-    error = ps2.config(pressures=True, rumble=True)
+    error = ps2.config(pressure=True, rumble=True)
     if error:
         print("Error configuring PS2")
         while True:
@@ -25,7 +26,7 @@ def initial(ps2):
         ps2.read(False, 0)
     print("Controller is ready. Press START + SELECT together to exit.")
 
-def mode_select(ps2):
+def mode_select(ps2,ctrl):
     if ps2.is_pressed('SELECT'):
         pctrl.car_mode += 1
         if pctrl.car_mode >=4:
@@ -35,23 +36,24 @@ def mode_select(ps2):
     elif ps2.is_pressed('START'):
         if pctrl.car_mode == 0:
             print("START+STOP")
-            ctrl.stop()
+            mn.stop(ctrl)
 
         if pctrl.car_mode == 1:
             print("Path Tracking")
-            ctrl.stop()
+            mn.stop(ctrl)
 
         if pctrl.car_mode == 2:
             print("Obstacle Avoidance")
-            ctrl.stop()
+            mn.stop(ctrl)
 
         if pctrl.car_mode == 3:
             print("Distance Following")
-            ctrl.stop()
+            mn.stop(ctrl)
 
 def dead_or_it(value):
-    temp = int(7.8 * (128 - value))
-    return temp if abs(temp) > DEAD_ZONE else 0
+    #temp = int(7.8 * (128 - value))
+    temp = int(4 * (128 - value))
+    return temp if abs(temp) > s.DEAD_ZONE else 0
 
 def slash_speed(x,y):
     if x > 0 and y > 0:
@@ -68,7 +70,7 @@ def joystick_move(ps2,ctrl,pctrl):
         pctrl.joy_mode = 1 - pctrl.joy_mode
         print(pctrl.joy_mode)
         print("Joystick Mode is switched.")
-        time.sleep_ms(READ_DELAY_MS)
+        time.sleep_ms(s.READ_DELAY_MS)
 
     left_x = ps2.get_joysticks('lx')
     left_y = ps2.get_joysticks('ly')
@@ -83,10 +85,10 @@ def joystick_move(ps2,ctrl,pctrl):
     if not pctrl.joy_mode:
         if abs(speed_ly) > 0 or abs(speed_ry) > 0 :
             pctrl.joy_active = True
-            ctrl.Joystick(speed_l,speed_r)
+            mn.joystick(ctrl,speed_ly,speed_ry)
         else :
             if pctrl.joy_active:
-                ctrl.stop()
+                mn.stop(ctrl)
                 pctrl.joy_active = False
     elif pctrl.joy_mode:
         if abs(speed_lx) > 0 or abs(speed_ly) > 0 :
@@ -96,15 +98,15 @@ def joystick_move(ps2,ctrl,pctrl):
             elif speed_lx * speed_ly < 0 :
                 mn.slash(ctrl,slash_speed(speed_lx,speed_ly),F)
             elif speed_lx == 0:
-                mn.straight(-speed_ly)
+                mn.straight(ctrl,-speed_ly)
             elif speed_ly == 0:
-                mn.side(-speed_lx)
+                mn.side(ctrl,-speed_lx)
         elif abs(speed_rx) > 0:
             pctrl.joy_active = True
-            mn.turn(-speed_rx)
+            mn.turn(ctrl,-speed_rx)
         else :
             if pctrl.joy_active:
-                ctrl.stop()
+                mn.stop(ctrl)
                 pctrl.joy_active = False
 
 def dpad_and_shoulder_move(ps2,ctrl,mv):
@@ -134,13 +136,13 @@ def dpad_and_shoulder_move(ps2,ctrl,mv):
         mv.tr = False
 
     if mv.up and mv.left:
-        mn.slash(ctrl,mv.speed,B)
+        mn.slash(ctrl,mv.speed,s.B)
     elif mv.up and mv.right:
-        mn.slash(ctrl,mv.speed,F)
+        mn.slash(ctrl,mv.speed,s.F)
     elif mv.down and mv.left:
-        mn.slash(ctrl,-mv.speed,F)
+        mn.slash(ctrl,-mv.speed,s.F)
     elif mv.down and mv.right:
-        mn.slash(ctrl,-mv.speed,B)
+        mn.slash(ctrl,-mv.speed,s.B)
     elif mv.up:
         mn.straight(ctrl,mv.speed)
     elif mv.down:
@@ -154,14 +156,14 @@ def dpad_and_shoulder_move(ps2,ctrl,mv):
     elif mv.tr:
         mn.turn(ctrl,-mv.speed)
     else:
-        mn.stop()
+        mn.stop(ctrl)
 
 def handler(ps2, ctrl, mv, pctrl):
     if ps2.is_held('START') and ps2.is_held('SELECT'):
         print("START and SELECT pressed together. Exiting...")
         return 1
 
-    mode_select(ps2,pctrl)
+#     mode_select(ps2,ctrl)
 
     joystick_move(ps2,ctrl,pctrl)
 
@@ -178,21 +180,21 @@ if __name__ == "__main__":
         if ps2.is_held('START') and ps2.is_held('SELECT'):
             print("START and SELECT pressed together. Exiting...")
             return 1
-        for name in BUTTONS:
+        for name in s.BUTTONS:
             if ps2.is_held(name):
                 print(f"{name} is being held")
         if ps2.is_pressure_enabled:
             if ps2.is_held('L1') or ps2.is_held('R1'):
-                value = ps2.get_joystick("all")
+                value = ps2.get_joysticks("all")
                 for axis, val in value.items():
                     print(f"{axis.upper()} = {val}")
         return 0
 
-    ps2 = PS2(DAT_PIN, CMD_PIN, SEL_PIN, CLK_PIN)
+    ps2 = PS2(s.DAT_PIN, s.CMD_PIN, s.SEL_PIN, s.CLK_PIN)
     initial(ps2)
     while True:
         if not ps2.read():
             continue
         if ps2_test(ps2):
             break
-        time.sleep_ms(READ_DELAY_MS)
+        time.sleep_ms(s.READ_DELAY_MS)

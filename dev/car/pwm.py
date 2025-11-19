@@ -2,7 +2,7 @@
     PWM端口类
 '''
 
-import setting
+import setting as s
 import machine
 
 class PWMs:
@@ -20,10 +20,10 @@ class PWMs:
             pin.freq(self.freq)
 
     def set_duty(self, pin_index, pulse_us):
-        if pulse_us > MAX_PULSE_US:
-            pulse_us = MAX_PULSE_US
-        elif pulse_us < MIN_PULSE_US:
-            pulse_us = MIN_PULSE_US
+        if pulse_us > s.MAX_PULSE_US:
+            pulse_us = s.MAX_PULSE_US
+        elif pulse_us < s.MIN_PULSE_US:
+            pulse_us = s.MIN_PULSE_US
 
         self.duty = int(((pulse_us * 65535) / (1000000 /self.freq)))
         print("Pin=",pin_index,"Duty=",self.duty)
