@@ -44,7 +44,7 @@ class REMOTE:
             time.sleep(1)
             self.ps2.read(False, 0)
         print("Controller is ready. Press START + SELECT together to exit.")
-        self.listen()
+        #self.listen()
 
     def stop(self):
         _thread.exit()
