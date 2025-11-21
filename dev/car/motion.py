@@ -6,15 +6,8 @@ import setting as s
 import time
 
 class MOTION:
-    def __init__(self,pwms,speed = s.SPEED):
+    def __init__(self,pwms):
         self.pwms = pwms
-        self.up = False
-        self.down = False
-        self.left = False
-        self.right = False
-        self.tl = False
-        self.tr = False
-        self.speed = speed
 
     def is_any_true(self):
         return any([self.up, self.down, self.left, self.right])

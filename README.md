@@ -163,3 +163,19 @@ pwm电机驱动、ps2手柄控制、循迹控制、超声探距、串口发送
 
 
 https://www.nologo.tech/product/esp32/esp32c3/esp32c3supermini/esp32C3SuperMini.html
+
+## 任务流程
+
+初始化
+
+验证通信
+
+ps2手柄控制底座小车
+
+ps2退出底座小车手柄控制，转交主机控制
+
+
+
+
+
+任务完成，主机退出底座小车控制，转交ps2手柄控制

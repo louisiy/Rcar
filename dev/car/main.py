@@ -16,16 +16,14 @@ def main():
     mv.initial()
 
     ps2 = PS2(s.DAT_PIN, s.CMD_PIN, s.SEL_PIN, s.CLK_PIN)
-    rm = remote.REMOTE(ps2)
+    rm = remote.REMOTE(ps2,mv)
     rm.initial()
 
     #uart = UART2()
 
     while True:
-        if not ps2.read():
-            continue
-        if rm.handler(ps2,pwms,mv,pctrl):
-            break
+        if rm.exit:
+            rm.stop()
         #msg = uart.poll()
 #         if msg:
 #             print(int(time.time()*1000))
