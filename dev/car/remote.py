@@ -21,29 +21,6 @@ class REMOTE:
         self.joy_mode = 0
         self.exit = False
 
-    def listen(self):
-        while True:
-            self.ps2.poll()
-            if self.handler()
-                break
-            time.sleep_ms(s.READ_DELAY_MS)
-
-    def initial(self):
-        error = self.ps2.config()
-        if error:
-            print("Error configuring PS2")
-            return error
-        print("Found PS2, configured successful")
-        print("Vibrating controller for 1 second...")
-        self.ps2.poll(True, 255)
-        time.sleep(1)
-        self.ps2.poll(False, 0)
-        print("Controller is ready. Press START + SELECT together to exit.")
-        _thread.start_new_thread(self.listen,())
-
-    def stop(self):
-        _thread.exit()
-
     def joystick_mode(self):
         if self.ps2.is_held('L3') and self.ps2.is_held('R3'):
             self.joy_mode = 1 - self.joy_mode
@@ -163,6 +140,28 @@ class REMOTE:
             self.dpad_and_shoulder_move()
         return 0
 
+    def listen(self):
+        while True:
+            self.ps2.poll()
+            if self.handler()
+                break
+            time.sleep_ms(s.READ_DELAY_MS)
+
+    def initial(self):
+        error = self.ps2.config()
+        if error:
+            print("Error configuring PS2")
+            return error
+        print("Found PS2, configured successful")
+        print("Vibrating controller for 1 second...")
+        self.ps2.poll(True, 255)
+        time.sleep(1)
+        self.ps2.poll(False, 0)
+        print("Controller is ready. Press START + SELECT together to exit.")
+        _thread.start_new_thread(self.listen,())
+
+    def stop(self):
+        _thread.exit()
 
 if __name__ == "__main__":
     ps2 = PS2(s.DAT_PIN, s.CMD_PIN, s.SEL_PIN, s.CLK_PIN)

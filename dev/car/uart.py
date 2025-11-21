@@ -24,7 +24,7 @@ class UART2:
         self.ut.write(data)
 
     def listen(self):
-        self.th = _thread.start_new_thread(self.read)
+        self.th = _thread.start_new_thread(self.read,())
 
     def stop(self):
         self.th.exit()

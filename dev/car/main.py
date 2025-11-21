@@ -31,7 +31,6 @@ def main():
 #             uart.send(msg)
 #         if msg == 'q':
 #             break
-        time.sleep_ms(s.READ_DELAY_MS)
     pwms.close()
 #     uart.close()
 
