@@ -3,8 +3,8 @@ from maix import app,camera,display,pinmap
 import atag
 import yolo
 import color
-# import wifi
-# import tcp
+import wifi
+import tcp
 
 
 cam = camera.Camera(640,480)
@@ -24,20 +24,20 @@ dis = display.Display()
 
 ch = color.COLORHANDLER()
 
-# ap = wifi.WIFIHANDLER()
-# tp = tcp.TCPHANDLER()
+ap = wifi.WIFIHANDLER()
+tp = tcp.TCPHANDLER()
 
-# ap.start()
-# tp.start()
+ap.start()
+tp.start()
 
 
 while not app.need_exit():
     img = cam.read()
 
     #img = at.search(img)
-    img = ch.search(img)
+    #img = ch.search(img)
     #img = dt.search(img)
 
     dis.show(img)
-# tp.stop()
-# ap.stop()
+tp.stop()
+ap.stop()

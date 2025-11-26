@@ -1,5 +1,4 @@
 from maix.network import wifi
-from maix import err
 
 class WIFIHANDLER:
     def __init__(self,
@@ -20,16 +19,23 @@ class WIFIHANDLER:
         self.hidden = hidden
         self.wifi = wifi.Wifi()
     def start(self):
-        print(f"[WiFiHandler] Starting AP mode with SSID: {self.ssid}")
-        err = self.wifi.start_ap(self.ssid, self.password, self.mode, self.channel, self.ip, self.netmask, self.hidden)
-        if err == err.ERR_NONE:
-            print(f"[WiFiHandler] Wi-Fi AP started successfully with SSID: {self.ssid}")
+        print(f"[WiFi] 正在以 AP 模式启动，无线名称(SSID): {self.ssid}")
+        ret = self.wifi.start_ap(self.ssid,
+                                 self.password,
+                                 self.mode,
+                                 self.channel,
+                                 self.ip,
+                                 self.netmask,
+                                 self.hidden)
+        if ret == 0:
+            print(f"[WiFi] AP 启动成功，SSID: {self.ssid}，IP: {self.ip}")
         else:
-            print(f"[WiFiHandler] Failed to start Wi-Fi AP: {err}")
+            print(f"[WiFi] 启动 AP 失败，错误码: {ret}")
+
     def stop(self):
-        print(f"[WiFiHandler] Stopping AP mode...")
-        err = self.wifi.stop_ap()
-        if err == err.ERR_NONE:
-            print("[WiFiHandler] Wi-Fi AP stopped successfully")
+        print("[WiFi] 正在关闭 AP 模式...")
+        ret = self.wifi.stop_ap()
+        if ret == 0:
+            print("[WiFi] AP 已成功关闭")
         else:
-            print(f"[WiFiHandler] Failed to stop Wi-Fi AP: {err}")
+            print(f"[WiFi] 关闭 AP 失败，错误码: {ret}")

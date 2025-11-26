@@ -3,6 +3,7 @@
 '''
 import setting as s
 from machine import UART
+import time
 import _thread
 
 class UART2:
@@ -10,13 +11,15 @@ class UART2:
         self.ut = UART(port,baud, bits, parity, stop)
         self.data = ""
         self.ut.write('uart2 ok!\r\n')
-        self.th = None
+        self.exit = False
 
     def read(self):
         while True:
+            if self.exit:
+                break
             if self.ut.any() > 0:
                 data = self.ut.read()
-                data = data.decode("uft-8",errors="ignore")
+                data = data.decode("utf-8")
                 if data != "":
                     self.data = data
 
@@ -24,21 +27,29 @@ class UART2:
         self.ut.write(data)
 
     def listen(self):
-        self.th = _thread.start_new_thread(self.read,())
+        th = _thread.start_new_thread(self.read,())
+
+    def get(self):
+        tmp = ""
+        if self.data:
+            tmp = self.data
+            self.data = ""
+        return tmp
 
     def stop(self):
-        self.th.exit()
+        self.exit = True
 
     def close(self):
         self.ut.deinit()
 
 if __name__ == "__main__":
-    import time
     uart = UART2()
     uart.send("hello world\n")
     uart.listen()
     while True:
-        msg = uart.data
+        print("oh")
+        msg = uart.get()
+        print(msg)
         if msg:
             print(int(time.time()*1000))
             print("Received:", msg)
@@ -46,6 +57,5 @@ if __name__ == "__main__":
         if msg == 'q':
             break
         time.sleep(0.1)
-    uart.send("Bye world\n")
     uart.stop()
     uart.close()

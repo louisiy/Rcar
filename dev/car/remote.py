@@ -27,12 +27,12 @@ class REMOTE:
             print(self.joy_mode)
             print("Joystick Mode is switched.")
 
-    def joystick_dead_out(value):
+    def joystick_dead_out(self,value):
         #temp = int(7.8 * (128 - value))
         temp = int(1.6 * (128 - value))
         return temp if abs(temp) > s.DEAD_ZONE else 0
 
-    def joystick_slash_speed(x,y):
+    def joystick_slash_speed(self,x,y):
         if x > 0 and y > 0:
             return -x if x < y else -y
         elif x < 0 and y < 0:
@@ -127,7 +127,7 @@ class REMOTE:
         elif self.tr:
             self.mv.turn(-self.speed)
         else:
-            self.mv.stop(pwms)
+            self.mv.stop()
 
     def handler(self):
         if self.ps2.is_held('START') and self.ps2.is_held('SELECT'):
@@ -143,7 +143,7 @@ class REMOTE:
     def listen(self):
         while True:
             self.ps2.poll()
-            if self.handler()
+            if self.handler():
                 break
             time.sleep_ms(s.READ_DELAY_MS)
 
@@ -168,5 +168,5 @@ if __name__ == "__main__":
     rm = REMOTE(ps2)
     rm.initial()
     while not rm.exit:
-        pass()
+        pass
     rm.stop()
