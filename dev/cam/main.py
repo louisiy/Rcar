@@ -1,35 +1,28 @@
 from maix import app,camera,display,pinmap
-# import uart
 import atag
 import yolo
 import color
 import wifi
-import tcp
-
+import bus
+import cmd
+import time
 
 cam = camera.Camera(640,480)
 dis = display.Display()
 
-# pinmap.set_pin_function("A29", "UART2_RX")
-# pinmap.set_pin_function("A28", "UART2_TX")
-
-# u0 = uart.UARTHANDLER("/dev/ttyS0")
-# u2 = uart.UARTHANDLER("/dev/ttyS2")
-# u0.listen()
-# u2.listen()
+pinmap.set_pin_function("A29", "UART2_RX")
+pinmap.set_pin_function("A28", "UART2_TX")
 
 #at = atag.ATAGHANDLER()
-
 #dt = yolo.YOLOHANDLER()
-
-ch = color.COLORHANDLER()
+#ch = color.COLORHANDLER()
 
 ap = wifi.WIFIHANDLER()
-tp = tcp.TCPHANDLER()
-
 ap.start()
-tp.start()
 
+b = bus.BUS()
+b.cb = lambda id_, msg: cmd.dispatch(b, id_, msg)
+b.start()
 
 while not app.need_exit():
     img = cam.read()
@@ -39,5 +32,5 @@ while not app.need_exit():
     #img = dt.search(img)
 
     dis.show(img)
-tp.stop()
+b.stop()
 ap.stop()

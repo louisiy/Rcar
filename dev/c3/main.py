@@ -12,13 +12,33 @@ SERVER_PORT = 8080
 servo = PWM(Pin(6))
 servo.freq(50)
 
-def set_servo_angle(angle):
-    min_pulse = 500000     # 0° = 0.5 ms
-    max_pulse = 2500000    # 180° = 2.5 ms
-    pulse_width = min_pulse + (max_pulse - min_pulse) * angle / 180
-    servo.duty_ns(int(pulse_width))
+def set_angle(angle):
+    min_p = 500000
+    max_p = 2500000
+    pulse = min_p + (max_p - min_p) * angle / 180
+    servo.duty_ns(int(pulse))
 
-def connect_wifi():
+_cmd = {}
+
+def reg(name):
+    def deco(fn):
+        _cmd[name] = fn
+        return fn
+    return deco
+
+@reg("UP")
+def cmd_up(sock):
+    print("[CMD] UP")
+    set_angle(180)
+    sock.send(b"PITE:OK\n")
+
+@reg("DOWN")
+def cmd_down(sock):
+    print("[CMD] DOWN")
+    set_angle(0)
+    sock.send(b"PITE:OK\n")
+
+def wifi_connect():
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(WIFI_SSID, WIFI_PASSWORD)
@@ -30,38 +50,37 @@ def connect_wifi():
     print("[WiFi] 连接成功:", wlan.ifconfig())
     return wlan
 
-def connect_server():
+def server_connect():
     sock = socket.socket()
-    print("[TCP] 连接服务器:", SERVER_IP, SERVER_PORT)
+    print("[TCP] 连接服务器中...")
     sock.connect((SERVER_IP, SERVER_PORT))
-    print("[TCP] 连接成功！")
+    print("[TCP] 连接成功")
     return sock
 
 def main():
-    wlan = connect_wifi()
-    sock = connect_server()
+    wifi_connect()
+    sock = server_connect()
+
+    sock.send(b"PITE:HELLO\n")
+    print("[TCP] 发送: PITE:HELLO")
 
     while True:
-        data = sock.recv(1024)
+        data = sock.recv(128)
         if not data:
             continue
-        cmd = data.decode()
-        print("收到指令:", cmd)
 
-        if cmd == "up":
-            set_servo_angle(180)
-            print("舵机转到 180°")
-            sock.send(b"OK\n")
+        raw = data.decode().strip()
+        if not raw:
+            continue
 
-        elif cmd == "down":
-            set_servo_angle(0)
-            print("舵机转到 0°")
-            sock.send(b"OK\n")
+        print("[TCP] 收到:", raw)
 
+        fn = _cmd.get(raw)
+        if fn:
+            fn(sock)
         else:
-            print("未知指令:", cmd)
+            print("[PITE] 未知命令:", raw)
+        time.sleep(0.02)
 
-        time.sleep(0.05)
-
-# 开机自动运行
-main()
+if __name__ == "__main__":
+    main()
