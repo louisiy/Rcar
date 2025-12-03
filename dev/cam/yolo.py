@@ -1,4 +1,4 @@
-from maix import nn
+from maix import nn,image
 
 class YOLOHANDLER:
     def __init__(self):

@@ -13,6 +13,10 @@ class BUS:
         self.msg = ""
         self.buf = False
 
+        self.s = None
+
+        self.ready = False
+
     def start(self):
         self.u0.cb = self._on_msg
         self.u2.cb = self._on_msg
@@ -35,13 +39,13 @@ class BUS:
         else:
             self.tp.send(id_, msg)
 
-    def recv(self):
-        if not self.buf:
-            return None, None
-        id_ = self.id_
-        msg = self.msg
-        self.buf = False
-        return id_, msg
+    # def recv(self):
+    #     if not self.buf:
+    #         return None, None
+    #     id_ = self.id_
+    #     msg = self.msg
+    #     self.buf = False
+    #     return id_, msg
 
     def _on_msg(self, id_, msg):
         self.id_ = id_
@@ -50,3 +54,5 @@ class BUS:
 
         if self.cb:
             self.cb(id_, msg)
+
+        self.buf = False

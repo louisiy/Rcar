@@ -9,7 +9,7 @@ WIFI_PASSWORD = "12345678"
 SERVER_IP = "192.168.66.1"
 SERVER_PORT = 8080
 
-servo = PWM(Pin(6))
+servo = PWM(Pin(4))
 servo.freq(50)
 
 def set_angle(angle):
@@ -27,42 +27,49 @@ def reg(name):
     return deco
 
 @reg("UP")
-def cmd_up(sock):
+def up(sock):
     print("[CMD] UP")
-    set_angle(180)
-    sock.send(b"PITE:OK\n")
+    set_angle(0)
+    time.sleep(2)
+    sock.send(b"PITE:UOK\n")
 
 @reg("DOWN")
-def cmd_down(sock):
+def down(sock):
     print("[CMD] DOWN")
-    set_angle(0)
-    sock.send(b"PITE:OK\n")
+    set_angle(120)
+    time.sleep(2)
+    sock.send(b"PITE:DOK\n")
 
 def wifi_connect():
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
-    wlan.connect(WIFI_SSID, WIFI_PASSWORD)
-    print("[WiFi] 连接中...")
-
-    while not wlan.isconnected():
-        time.sleep(0.5)
-
+    if not wlan.isconnected():
+        print("[WiFi] 连接中...")
+        wlan.connect(WIFI_SSID, WIFI_PASSWORD)
+        while not wlan.isconnected():
+            pass
     print("[WiFi] 连接成功:", wlan.ifconfig())
     return wlan
 
 def server_connect():
-    sock = socket.socket()
-    print("[TCP] 连接服务器中...")
-    sock.connect((SERVER_IP, SERVER_PORT))
-    print("[TCP] 连接成功")
-    return sock
+    while True:
+        try:
+            sock = socket.socket()
+            print("[TCP] 尝试连接服务器...")
+            sock.connect((SERVER_IP, SERVER_PORT))
+            print("[TCP] 连接成功")
+            return sock
+        except Exception as e:
+            print("[TCP] 连接失败:", e)
+            time.sleep(1)
 
 def main():
-    wifi_connect()
+    wlan = wifi_connect()
     sock = server_connect()
 
     sock.send(b"PITE:HELLO\n")
     print("[TCP] 发送: PITE:HELLO")
+    set_angle(0)
 
     while True:
         data = sock.recv(128)

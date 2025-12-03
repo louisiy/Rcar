@@ -41,10 +41,11 @@ class TCPHANDLER:
         addr = self.ids.get(id_)
         if not addr:
             print(f"[TCP] {id_} 不存在")
-            return
+            return 1
         cli = self.clis.get(addr)
         if cli:
             cli.sendall(msg.encode())
+        return 0
 
     def _accept(self):
         while self.run:
@@ -74,8 +75,8 @@ class TCPHANDLER:
             if msg == "HELLO":
                 self.ids[id_] = addr
                 print(f"[TCP] 注册 id={id_}")
-                if self.cb:
-                    self.cb(id_, msg)
+                if self.cb and len(self.ids) == 1:
+                    self.cb("TCP", "OK")
             else:
                 if self.cb:
                     self.cb(id_, msg)

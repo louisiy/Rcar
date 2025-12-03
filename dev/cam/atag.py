@@ -12,7 +12,7 @@ class ATAGHANDLER:
         self.z = 0
         self.d = 0
 
-    def distance(self,x,y,z):
+    def distance(self,k,x,y,z):
         return abs(k*math.sqrt(x*x+y*y+z*z))
 
     def search(self,img):
@@ -26,7 +26,7 @@ class ATAGHANDLER:
             self.x = -atag.x_translation()
             self.y = atag.y_translation()
             self.z = -atag.z_translation()
-            self.d = int(distance(self.x,self.y,self.z)*100)
+            self.d = int(distance(self.k,self.x,self.y,self.z)*100)
         return img
 
 
