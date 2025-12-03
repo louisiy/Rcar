@@ -29,7 +29,7 @@ class MOTION:
         self.pwms.set_duty(1,1500)
         self.pwms.set_duty(2,1500)
         self.pwms.set_duty(3,1500)
-        print("stop")
+        # print("[MV] 停止")
 
     def straight(self,speed):
         self.pwms.set_duty(0,1500+speed)
@@ -37,9 +37,9 @@ class MOTION:
         self.pwms.set_duty(2,1500+speed)
         self.pwms.set_duty(3,1500-speed)
         if speed > 0:
-            print("move forward")
+            print("[MV] 前进")
         elif speed < 0:
-            print("move backward")
+            print("[MV] 后退")
 
     def turn(self,speed):
         self.pwms.set_duty(0,1500-speed)
@@ -47,9 +47,9 @@ class MOTION:
         self.pwms.set_duty(2,1500-speed)
         self.pwms.set_duty(3,1500-speed)
         if speed > 0:
-            print("turn left")
+            print("[MV] 左转")
         elif speed < 0:
-            print("turn right")
+            print("[MV] 右转")
 
     def side(self,speed):
         self.pwms.set_duty(0,1500-speed)
@@ -57,9 +57,9 @@ class MOTION:
         self.pwms.set_duty(2,1500+speed)
         self.pwms.set_duty(3,1500+speed)
         if speed > 0:
-            print("move left")
+            print("[MV] 左平移")
         elif speed < 0:
-            print("move right")
+            print("[MV] 右平移")
 
     def slash(self,speed,direction):
         self.pwms.set_duty(0,1500+speed*direction)
@@ -67,20 +67,20 @@ class MOTION:
         self.pwms.set_duty(2,1500+speed*(1-direction))
         self.pwms.set_duty(3,1500-speed*direction)
         if speed > 0 and not direction:
-            print("move forward left")
+            print("[MV] 向左前方")
         elif speed < 0 and not direction:
-            print("move backward right")
+            print("[MV] 向右后方")
         elif speed > 0 and direction:
-            print("move forward right")
+            print("[MV] 向右前方")
         elif speed < 0 and direction:
-            print("move backward left")
+            print("[MV] 向左后方")
 
     def joystick(self,speed_1,speed_2):
         self.pwms.set_duty(0,1500+speed_1)
         self.pwms.set_duty(1,1500-speed_2)
         self.pwms.set_duty(2,1500+speed_1)
         self.pwms.set_duty(3,1500-speed_2)
-        print("Joystick")
+        print("[MV] 手柄控制")
 
 if __name__ == "__main__":
     import setting

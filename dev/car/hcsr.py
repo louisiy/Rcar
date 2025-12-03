@@ -24,7 +24,7 @@ class HC_SR04:
             return t
         except OSError as ex:
             if ex.args[0] == 110: # 110 = ETIMEDOUT
-                raise OSError('Out of range')
+                raise OSError('[HCSR] Out of range')
             raise ex
 
     def distance_mm(self):

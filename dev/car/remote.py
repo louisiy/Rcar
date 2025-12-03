@@ -19,13 +19,14 @@ class REMOTE:
         self.speed = speed
         self.joy_active = 0
         self.joy_mode = 0
-        self.exit = False
+        self.run = False
+        self.task_start = False
 
     def joystick_mode(self):
         if self.ps2.is_held('L3') and self.ps2.is_held('R3'):
             self.joy_mode = 1 - self.joy_mode
             print(self.joy_mode)
-            print("Joystick Mode is switched.")
+            print("[RM] 手柄模式切换")
 
     def joystick_dead_out(self,value):
         #temp = int(7.8 * (128 - value))
@@ -65,16 +66,16 @@ class REMOTE:
             if abs(speed_lx) > 0 or abs(speed_ly) > 0 :
                 self.joy_active = True
                 if speed_lx * speed_ly > 0 :
-                    self.mv.slash(joystick_slash_speed(speed_lx,speed_ly),B)
+                    self.mv.slash(-1*self.joystick_slash_speed(speed_lx,speed_ly),s.B)
                 elif speed_lx * speed_ly < 0 :
-                    self.mv.slash(joystick_slash_speed(speed_lx,speed_ly),F)
+                    self.mv.slash(-1*self.joystick_slash_speed(speed_lx,speed_ly),s.F)
                 elif speed_lx == 0:
-                    self.mv.straight(-speed_ly)
+                    self.mv.straight(speed_ly)
                 elif speed_ly == 0:
-                    self.mv.side(-speed_lx)
+                    self.mv.side(speed_lx)
             elif abs(speed_rx) > 0:
                 self.joy_active = True
-                self.mv.turn(-speed_rx)
+                self.mv.turn(speed_rx)
             else :
                 if self.joy_active:
                     self.mv.stop()
@@ -131,42 +132,42 @@ class REMOTE:
 
     def handler(self):
         if self.ps2.is_held('START') and self.ps2.is_held('SELECT'):
-            print("START and SELECT pressed together. Exiting...")
-            self.exit = True
-            return 1
+            print("[RM] START和SELECT被同时按住。退出中...")
+            self.run = False
+            self.task_start = True
         self.joystick_mode()
         self.joystick_move()
         if not self.joy_active:
             self.dpad_and_shoulder_move()
-        return 0
 
     def listen(self):
-        while True:
+        while self.run:
             self.ps2.poll()
-            if self.handler():
-                break
+            self.handler()
             time.sleep_ms(s.READ_DELAY_MS)
 
     def initial(self):
         error = self.ps2.config()
         if error:
-            print("Error configuring PS2")
+            print("[RM] 无法配置PS2")
             return error
-        print("Found PS2, configured successful")
-        print("Vibrating controller for 1 second...")
+        print("[RM] 成功配置PS2")
+        print("[RM] 振动1秒")
         self.ps2.poll(True, 255)
         time.sleep(1)
         self.ps2.poll(False, 0)
-        print("Controller is ready. Press START + SELECT together to exit.")
+        print("[RM] 手柄就绪，同时按住SELECT和START退出手柄控制")
+        self.run = True
         _thread.start_new_thread(self.listen,())
 
-    def stop(self):
-        _thread.exit()
+    # def stop(self):
+    #     _thread.exit()
 
-if __name__ == "__main__":
-    ps2 = PS2(s.DAT_PIN, s.CMD_PIN, s.SEL_PIN, s.CLK_PIN)
-    rm = REMOTE(ps2)
-    rm.initial()
-    while not rm.exit:
-        pass
-    rm.stop()
+# if __name__ == "__main__":
+#     from ps2 import PS2
+#     ps2 = PS2(s.DAT_PIN, s.CMD_PIN, s.SEL_PIN, s.CLK_PIN)
+#     rm = REMOTE(ps2,mv)
+#     rm.initial()
+#     while not rm.exit:
+#         pass
+#     rm.stop()

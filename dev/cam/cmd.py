@@ -1,5 +1,5 @@
 '''
-    处理所有的字符串信号
+    命令处理
 '''
 
 
@@ -21,26 +21,38 @@ def dispatch(b, id_, msg):
     else:
         print(f"[CMD] 未处理消息 {key}")
 
+@reg("CAR:HELLO")
+def car_ready(b,id_,msg):
+    print(f"[UART] 小车连接完毕")
+
+@reg("ARM:HELLO")
+def arm_ready(b,id_,msg):
+    print(f"[UART] 机械臂连接完毕")
+
 @reg("TCP:OK")
-def ready(b,id_,msg):
+def tcp_ready(b,id_,msg):
     b.ready = True
     print(f"[TCP] 移动设备连接完毕")
 
 @reg("TASK:CHUSHIHUA")
 def initial(b,id_,msg):
+    print(f"[BUS] 等待设备连接")
     while not b.ready:
-        print(f"[BUS] 等待设备连接")
         time.sleep(0.5)
     print(f"[BUS] 总线通讯就绪")
     b.s.done()
 
-@reg("TASK:DENGDAI")
-def waitps2(b,id_,msg):
+@reg("TASK:WAITGOGOGO")
+def waitgogogo(b,id_,msg):
+    print(f"[MAIN] 等待PS2手柄退出")
     while not b.s.go:
-        print(f"[MAIN] 等待PS2手柄退出")
         time.sleep(0.5)
     print(f"[MAIN] PS2手柄退出，任务正式开始")
     b.s.done()
+
+@reg("CAR:GOGOGO")
+def gogogo(b,id_,msg):
+    b.s.go = True
 
 @reg("TASK:XIQU")
 def xiqu(b,id_,msg):

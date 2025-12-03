@@ -26,7 +26,7 @@ class PWMs:
             pulse_us = s.MIN_PULSE_US
 
         self.duty = int(((pulse_us * 65535) / (1000000 /self.freq)))
-        print("Pin=",pin_index,"Duty=",self.duty)
+        # print("Pin=",pin_index,"Duty=",self.duty)
 
         if 0 <= pin_index < len(self.pins):
             self.pins[pin_index].duty_u16(self.duty)

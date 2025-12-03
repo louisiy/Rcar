@@ -94,19 +94,19 @@ if __name__ == "__main__":
     error = 1
     error = ps2.config()
     if error:
-        print("Error configuring PS2")
+        print("[RM] 无法配置PS2")
     else :
-        print("Found PS2, configured successful")
-        print("Vibrating controller for 1 second...")
+        print("[RM] 成功配置PS2")
+        print("[RM] 振动1秒")
         ps2.poll(True, 255)
         time.sleep(1)
         ps2.poll(False, 0)
-        print("Controller is ready. Press START + SELECT together to exit.")
+        print("[RM] 手柄就绪，同时按住SELECT和START退出手柄控制")
         while True:
             ps2.poll()
             for name in s.BUTTONS:
                 if ps2.is_pressed(name):
-                    print(f"{name} is being pressed")
+                    print(f"[RM] {name} 被按下")
             if ps2.is_held('L1') or ps2.is_held('R1'):
                 value = ps2.get_joysticks("all")
                 for axis, val in value.items():
