@@ -1,3 +1,7 @@
+'''
+    图像识别
+'''
+
 from maix import nn,image
 
 class YOLOHANDLER:

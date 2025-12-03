@@ -1,3 +1,8 @@
+'''
+    通信总线
+'''
+
+
 from maix import pinmap
 import uart
 import tcp

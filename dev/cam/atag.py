@@ -1,3 +1,8 @@
+'''
+    识别Apriltag
+'''
+
+
 from maix import image
 import math
 
@@ -28,6 +33,3 @@ class ATAGHANDLER:
             self.z = -atag.z_translation()
             self.d = int(distance(self.k,self.x,self.y,self.z)*100)
         return img
-
-
-

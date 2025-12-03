@@ -1,3 +1,8 @@
+'''
+    颜色识别
+'''
+
+
 from maix import image
 
 class COLORHANDLER:

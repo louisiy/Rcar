@@ -1,3 +1,8 @@
+'''
+    主程序入口
+'''
+
+
 from maix import app,camera,display,pinmap
 import atag
 import yolo
@@ -8,24 +13,19 @@ import cmd
 import time
 import state
 
-# 相机初始化
 cam = camera.Camera(640,480)
 dis = display.Display()
 
-# UART2针脚初始化
 pinmap.set_pin_function("A29", "UART2_RX")
 pinmap.set_pin_function("A28", "UART2_TX")
 
-# 摄像头功能输出化
 #at = atag.ATAGHANDLER()
 #dt = yolo.YOLOHANDLER()
 #ch = color.COLORHANDLER()
 
-# wifi初始化
 ap = wifi.WIFIHANDLER()
 ap.start()
 
-# 信号总线初始化
 b = bus.BUS()
 b.cb = lambda id_, msg: cmd.dispatch(b, id_, msg)
 b.start()

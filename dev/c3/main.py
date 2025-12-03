@@ -1,3 +1,8 @@
+'''
+    移液枪电机客户端 ID:PITE
+'''
+
+
 import network
 import time
 import socket

@@ -1,3 +1,8 @@
+'''
+    管理UART接口
+'''
+
+
 from maix import uart
 import threading
 

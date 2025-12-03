@@ -1,3 +1,8 @@
+'''
+    管理WiFi热点
+'''
+
+
 from maix.network import wifi
 
 class WIFIHANDLER:

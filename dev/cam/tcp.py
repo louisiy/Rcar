@@ -1,3 +1,8 @@
+'''
+    管理TCP服务
+'''
+
+
 import socket
 import threading
 

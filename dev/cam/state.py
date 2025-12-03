@@ -1,3 +1,8 @@
+'''
+    管理任务列表与状态
+'''
+
+
 import json
 
 class STATE:
