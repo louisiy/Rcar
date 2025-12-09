@@ -14,7 +14,7 @@ class TCPHANDLER:
         self.timeout = timeout
         self.socket = None
         self.err = None
-        self.data = ""
+        self.cb = None
 
     def start(self):
         self.err, self.socket = TCPCreate(self.is_server, self.ip, self.port)
@@ -23,9 +23,18 @@ class TCPHANDLER:
     def read(self):
         while True:
             self.err,data = TCPRead(self.socket,data)
-            data = data.decode('utf-8', errors='ignore')
-            if data !="":
-                self.data = data
+
+            if not data:
+                continue
+            raw = data.decode().strip()
+
+            if not raw:
+                continue
+            print("[TCP] 收到:",raw)
+
+            if self.cb:
+                self.cb(msg)
+
 
     def send(self,data):
         TCPWrite(self.socket, data)
@@ -37,4 +46,3 @@ class TCPHANDLER:
 
     def stop(self):
         TCPDestroy(self.socket)
-

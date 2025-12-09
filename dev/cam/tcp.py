@@ -19,6 +19,8 @@ class TCPHANDLER:
 
         self.cb = None             # 回调：cb(id, msg)
 
+        self.devices = 1
+
     def start(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -80,7 +82,7 @@ class TCPHANDLER:
             if msg == "HELLO":
                 self.ids[id_] = addr
                 print(f"[TCP] 注册 id={id_}")
-                if self.cb and len(self.ids) == 1:
+                if self.cb and len(self.ids) == self.devices:
                     self.cb("TCP", "OK")
             else:
                 if self.cb:
