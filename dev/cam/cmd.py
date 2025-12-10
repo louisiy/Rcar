@@ -36,6 +36,8 @@ def car_ready(b):
 
 @reg("ARM:HELLO")
 def arm_ready(b):
+    #单独测试机械臂
+    #b.ready = True
     print(f"[UART] 机械臂连接完毕")
 
 @reg("TCP:OK")

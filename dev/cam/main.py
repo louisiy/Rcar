@@ -37,12 +37,14 @@ while not app.need_exit():
     if s.at:
         img = at.search(img)
         if not at.err:
-            b.send("ATAG="+at.xyz())
+            msg = "ATAG="+at.xyz()
+            b.send("ARM",msg)
             s.at = False
     if s.ch:
         img = ch.search(img)
         if not ch.err:
-            b.send("PHASE="+ch.dis)
+            msg = "PHASE="+ch.dis
+            b.send("ARM",msg)
             s.ch = False
     s.update()
     dis.show(img)
