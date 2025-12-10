@@ -7,13 +7,16 @@ import time
 from pwm import PWMs
 from ps2 import PS2
 from uart import UART2
+import tcrt
 import motion
 import remote
 import cmd
 
 def main():
+    tcrt = TCRT(s.TCRT_L_PIN,s.TCRT_R_PIN)
+
     pwms = PWMs(s.PINs, s.FREQ)
-    mv = motion.MOTION(pwms)
+    mv = motion.MOTION(pwms,trct.state())
     mv.initial()
 
     ps2 = PS2(s.DAT_PIN, s.CMD_PIN, s.SEL_PIN, s.CLK_PIN)
@@ -23,7 +26,7 @@ def main():
     uart = UART2()
     uart.send("CAR:HELLO\n")
     uart.start()
-    uart.cb = lambda raw: cmd.dispatch(uart, raw)
+    uart.cb = lambda raw: cmd.dispatch(uart, mv, raw)
 
     while True:
         if getattr(rm, "task_start", True):

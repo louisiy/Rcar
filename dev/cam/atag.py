@@ -12,6 +12,7 @@ class ATAGHANDLER:
         self.k = 1
         self.img = ""
         self.atags = []
+        self.err = 0
         self.x = 0
         self.y = 0
         self.z = 0
@@ -23,13 +24,22 @@ class ATAGHANDLER:
     def search(self,img):
         self.img = img.resize(320,240)
         self.atags = self.img.find_apriltags()
-        if self.atags != []:
-            atag = atags[0]
+        if self.atags == []:
+            self.err = 1
+        elif self.atags != []:
+            atag = self.atags[0]
             corners = atag.corners()
             for i in range(4):
                 img.draw_line(((corners[i][0])*2), ((corners[i][1])*2), ((corners[(i + 1) % 4][0])*2), ((corners[(i + 1) % 4][1])*2), image.COLOR_GREEN, 10)
             self.x = -atag.x_translation()
             self.y = atag.y_translation()
             self.z = -atag.z_translation()
-            self.d = int(distance(self.k,self.x,self.y,self.z)*100)
+            self.d = int(self.distance(self.k,self.x,self.y,self.z)*100)
         return img
+
+    def xyz(self):
+        x = round(self.x, 2)
+        y = round(self.y, 2)
+        z = round(self.z, 2)
+
+        return f"{x},{y},{z}"

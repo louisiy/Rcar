@@ -22,7 +22,7 @@ class TCRT:
             return TCRT_OFF
 
 if __name__ == '__main__':
-    tcrt = TCRT(TCRT_L_PIN,TCRT_R_PIN )
+    tcrt = TCRT(TCRT_L_PIN,TCRT_R_PIN)
     while True:
         print("left=",tcrt.left.value(),"right=",tcrt.right.value())
         flag = tcrt.state()

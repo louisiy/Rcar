@@ -6,8 +6,9 @@ import setting as s
 import time
 
 class MOTION:
-    def __init__(self,pwms):
+    def __init__(self,pwms,flag):
         self.pwms = pwms
+        self.flag = flag
 
     def is_any_true(self):
         return any([self.up, self.down, self.left, self.right])
@@ -81,6 +82,20 @@ class MOTION:
         self.pwms.set_duty(2,1500+speed_1)
         self.pwms.set_duty(3,1500-speed_2)
         print("[MV] 手柄控制")
+
+    def move_time_traj(self,speed,duration):
+        start = time.time()
+        while (time.time()-start)> duration:
+            if flag == s.TCRT_ON:
+                self.straight(speed)
+            elif flag == s.TCRT_OFF:
+                self.stop()
+                return 1
+            elif flag == s.TCRT_LEFT:
+                self.turn(-speed/10)
+            elif flag == s.TCRT_RIGHT:
+                self.turn(speed/10)
+        return 0
 
 if __name__ == "__main__":
     import setting

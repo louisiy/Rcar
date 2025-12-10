@@ -79,6 +79,9 @@ class TCPHANDLER:
 
             id_, msg = raw.split(":", 1)
 
+            #抛开移动设备测试
+            #self.cb("TCP","OK")
+
             if msg == "HELLO":
                 self.ids[id_] = addr
                 print(f"[TCP] 注册 id={id_}")
