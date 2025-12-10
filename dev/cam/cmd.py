@@ -99,10 +99,17 @@ def atag_pos_ok(b):
     b.s.done()
     print(f"[CMD] ATAG对齐完毕")
 
+# TODO:更新注射泵具体命令信号
 #
-# @reg("XIQU")
-# def xiqu(b):
-#     print(f"[CMD] 开始吸取")
+@reg("TASK:XIYE")
+def pump_xiye(b):
+    b.send("PUMP","XI")
+    print(f"[CMD] 注射泵吸液")
+
+@reg("PUMP:XOK")
+def pump_paiye(b):
+    b.send("PUMP","PAI")
+    print(f"[CMD] 注射泵排液")
 
 #
 # @reg("TASK:XIQU")

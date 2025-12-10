@@ -59,7 +59,7 @@ def reg(name):
 
 @reg("UP")
 def up(sock):
-    print("[CMD] UP")
+    print("[PITE] UP")
     # FIXME: 确认这是正确的角度
     set_angle(0)
     time.sleep(2)
@@ -67,7 +67,7 @@ def up(sock):
 
 @reg("DOWN")
 def down(sock):
-    print("[CMD] DOWN")
+    print("[PITE] DOWN")
     # FIXME: 确认这是正确的角度
     set_angle(120)
     time.sleep(2)

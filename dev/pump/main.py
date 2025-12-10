@@ -6,13 +6,58 @@
 import network
 import time
 import socket
-from machine import Pin, PWM
+from machine import Pin, PWM, UART
 
 # UART
-# TODO:UART初始化
+uart = UART(1, baudrate=9600, bits=8, parity=None, stop=1, tx=2, rx=3)
 
 # PUMP
-# TODO:泵的功能代码
+RESET = b'\xCC\x00\x45\x00\x00\xDD\xEE\x01'
+DRPM400 = b'\xCC\x00\x4B\x90\x01\xDD\x85\x02'
+#吸
+EX4ML  = b'\xCC\x00\x4D\x80\x25\xDD\x9B\x02'
+#排
+DI4ML = b'\xCC\x00\x42\x80\x25\xDD\x90\x02'
+
+def send(msg):
+    rlen = 8
+    timeout = 3
+
+    uart.write(msg)
+    print(f"[UART] 发送 {msg}")
+
+    start = time.time()
+    buf = bytearray()
+
+    while time.time() - start < timeout:
+        if uart.any():
+            buf.extend(uart.read())
+            if len(buf) >= rlen:
+                print("[UART] 接收", bytes(buf))
+                return bytes(buf)
+        time.sleep(0.001)
+
+    print("[UART] 超时未接收到回应")
+    return None
+
+def init():
+    send(DRPM400)
+    send(RESET)
+    print(f"[PUMP] 初始化完毕")
+
+def aspirate():
+    r = send(EX4ML)
+    if not r :
+        print(f"[PUMP] 泵未响应")
+        return 1
+    return 0
+
+def dispense():
+    r = send(DI4ML)
+    if not r :
+        print(f"[PUMP] 泵未响应")
+        return 1
+    return 0
 
 # WIFI TCP
 WIFI_SSID = "CAMAP"
@@ -53,14 +98,29 @@ def reg(name):
         return fn
     return deco
 
-# @reg("UP")
-# def up(sock):
-#     print("[CMD] UP")
-#     set_angle(0)
-#     time.sleep(2)
-#     sock.send(b"PITE:UOK\n")
+@reg("XI")
+def xiye(sock):
+    print("[PUMP] 吸取")
+    err = aspirate()
+    time.sleep(1)
+    if err:
+        sock.send(b"PUMP:EER")
+        print("[TCP] 发送: PUMP:ERR")
+    else:
+        sock.send(b"PUMP:XOK")
+        print("[TCP] 发送: PUMP:XOK")
 
-# TODO: 信号调度
+@reg("PAI")
+def paiye(sock):
+    print("[PUMP] 排液")
+    err = dispense()
+    time.sleep(1)
+    if err:
+        sock.send(b"PUMP:EER")
+        print("[TCP] 发送: PUMP:ERR")
+    else:
+        sock.send(b"PUMP:POK")
+        print("[TCP] 发送: PUMP:POK")
 
 def main():
     wlan = wifi_connect()
@@ -68,7 +128,7 @@ def main():
 
     sock.send(b"PUMP:HELLO\n")
     print("[TCP] 发送: PUMP:HELLO")
-    # TODO:初始化泵代码
+    init()
 
     while True:
         data = sock.recv(128)
