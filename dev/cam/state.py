@@ -17,6 +17,7 @@ class STATE:
         self.go = False
         self.over = False
         self.at = False
+        self.ch = False
 
     def load(self,path):
         with open(path,"r",encoding="utf-8") as f:

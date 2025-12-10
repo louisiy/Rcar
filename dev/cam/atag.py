@@ -11,7 +11,6 @@ class ATAGHANDLER:
         self.family = image.ApriltagFamilies.TAG36H11
         self.k = 1
         self.img = ""
-        self.atags = []
         self.err = 0
         self.x = 0
         self.y = 0
@@ -23,14 +22,14 @@ class ATAGHANDLER:
 
     def search(self,img):
         self.img = img.resize(320,240)
-        self.atags = self.img.find_apriltags()
-        if self.atags == []:
+        atags = self.img.find_apriltags()
+        if atags == []:
             self.err = 1
-        elif self.atags != []:
-            atag = self.atags[0]
+        elif atags != []:
+            atag = atags[0]
             corners = atag.corners()
             for i in range(4):
-                img.draw_line(((corners[i][0])*2), ((corners[i][1])*2), ((corners[(i + 1) % 4][0])*2), ((corners[(i + 1) % 4][1])*2), image.COLOR_GREEN, 10)
+                img.draw_line(((corners[i][0])*2), ((corners[i][1])*2), ((corners[(i + 1) % 4][0])*2), ((corners[(i + 1) % 4][1])*2), image.COLOR_GREEN, 5)
             self.x = -atag.x_translation()
             self.y = atag.y_translation()
             self.z = -atag.z_translation()

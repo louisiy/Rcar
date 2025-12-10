@@ -19,7 +19,7 @@ pinmap.set_pin_function("A29", "UART2_RX")
 pinmap.set_pin_function("A28", "UART2_TX")
 
 at = atag.ATAGHANDLER()
-#ch = color.COLORHANDLER()
+ch = color.COLORHANDLER()
 
 ap = wifi.WIFIHANDLER()
 ap.start()
@@ -36,10 +36,14 @@ while not app.need_exit():
     img = cam.read()
     if s.at:
         img = at.search(img)
-        if not err:
+        if not at.err:
             b.send("ATAG="+at.xyz())
             s.at = False
-    #img = ch.search(img)
+    if s.ch:
+        img = ch.search(img)
+        if not ch.err:
+            b.send("PHASE="+ch.dis)
+            s.ch = False
     s.update()
     dis.show(img)
     if getattr(s, "over", False):

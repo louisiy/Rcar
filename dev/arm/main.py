@@ -21,6 +21,12 @@ while not exit:
     fn(socket,buf)
     continue
 
+  if raw.startswith("PHASE="):
+    buf = raw[6:]
+    fn = _cmd.get("PHASE=")
+    fn(socket,buf)
+    continue
+
   fn = _cmd.get(raw)
   if fn:
     fn(socket)

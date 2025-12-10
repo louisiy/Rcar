@@ -13,19 +13,23 @@ class COLORHANDLER:
                 ):
         self.thresholds = thresholds
         self.interval = interval
+        self.err = 0
+        self.d = 0
 
     def search(self,img):
         blobs = img.find_blobs(self.thresholds, pixels_threshold=10)
-        if blobs != []:
+        if blobs == []:
+            self.err = 1
+        elif blobs != []:
             for blob in blobs:
-                print(blob[0], blob[1], blob[2], blob[3])
-                img.draw_rect(blob[0], blob[1], blob[2], blob[3], image.COLOR_GREEN, 5)
-                if     abs(blob[0]  +  ( blob[2]/2 ) - 320) > 30 and ( blob[0]  +  ( blob[2]/2 ) ) < 320 :
-                    print(b'horizontal',blob[0]  +  ( blob[2]/2 ) - 320)
-                elif   abs(blob[0]  +  ( blob[2]/2 ) - 320) > 30 and ( blob[0]  +  ( blob[2]/2 ) ) > 320 :
-                    print(b'horizontal',blob[0]  +  ( blob[2]/2 ) - 320)
-                elif   abs(blob[1]  +  ( blob[3]/2 ) - 240) > 30 and ( blob[1]  +  ( blob[3]/2 ) ) < 240 :
-                    print(b'vertical',blob[1]  +  ( blob[3]/2 ) - 240)
-                elif   abs(blob[1]  +  ( blob[3]/2 ) - 240) > 30 and ( blob[1]  +  ( blob[3]/2 ) ) > 240 :
-                    print(b'vertical',blob[1]  +  ( blob[3]/2 ) - 240)
+                x, y, w, h = blob[0], blob[1], blob[2], blob[3]
+                img.draw_rect(x, y, w, h, image.COLOR_GREEN, 5)
+                bottom = y + h
+                center = 240
+                self.d = bottom - center
         return img
+
+    def dis(self):
+        dis = round(self.d,2)
+
+        return f"{dis}"

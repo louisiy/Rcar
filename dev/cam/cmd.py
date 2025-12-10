@@ -96,8 +96,24 @@ def atag_re_pos(b):
 
 @reg("ARM:ATAGOK")
 def atag_pos_ok(b):
-    b.s.done()
     print(f"[CMD] ATAG对齐完毕")
+    b.s.done()
+
+#
+@reg("TASK:PHASEINTERFACE")
+def phase_interface(b):
+    b.s.ch = True
+    print(f"[CMD] 寻找相界面")
+
+@reg("ARM:REPHASE")
+def rephase(b):
+    b.s.ch = True
+    print(f"[CMD] 再次寻找相界面")
+
+@reg("ARM:PHASEOK")
+def phase_ok(b):
+    print(f"[CMD] 相界面寻找完毕")
+    b.s.done()
 
 # TODO:更新注射泵具体命令信号
 #
