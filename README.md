@@ -16,13 +16,9 @@ MaixCam视觉+主控
 
 - ESP32-C3，5V供电，驱动舵机，WIFI与MaixCam连接
 
-天平（外设）
+注射泵（外设）
 
-- 待确认串口形式，但通过ESP32-C3转WIFI与MaixCam连接
-
-搅拌电机（外设）
-
-- 待确认串口形式，但通过ESP32-C3转WIFI与MaixCam连接
+- RS232转UART连接ESP32-C3，WIFI与MaixCam连接
 
 ## 组成部分
 
@@ -148,27 +144,5 @@ pwm电机驱动、ps2手柄控制、循迹控制、超声探距、串口发送
 
 外设与MaixCam主机TCP通信
 
-#### TODO
-
-正在等货
-
-正在学习
-
-
-https://www.nologo.tech/product/esp32/esp32c3/esp32c3supermini/esp32C3SuperMini.html
-
 ## 任务流程
 
-初始化
-
-验证通信
-
-ps2手柄控制底座小车
-
-ps2退出底座小车手柄控制，转交主机控制
-
-
-
-
-
-任务完成，主机退出底座小车控制，转交ps2手柄控制
