@@ -2,8 +2,10 @@
     主程序入口
 '''
 
-
-from maix import app,camera,display,pinmap
+from maix import app, pinmap
+import video
+import log
+import web
 import atag
 import color
 import wifi
@@ -12,8 +14,7 @@ import cmd
 import time
 import state
 
-cam = camera.Camera(640,480)
-dis = display.Display()
+log.setup()
 
 pinmap.set_pin_function("A29", "UART2_RX")
 pinmap.set_pin_function("A28", "UART2_TX")
@@ -32,24 +33,17 @@ s = state.STATE("./task.json")
 s.cb = lambda id_, msg: cmd.dispatch(b, id_, msg)
 b.s = s
 
+v = video.VIDEO(s,b,at,ch)
+v.start()
+
+web.start(port = 5000)
+
 while not app.need_exit():
-    img = cam.read()
-    if s.at:
-        img = at.search(img)
-        if not at.err:
-            msg = "ATAG="+at.xyz()
-            b.send("ARM",msg)
-            s.at = False
-    if s.ch:
-        img = ch.search(img)
-        if not ch.err:
-            msg = "PHASE="+ch.dis
-            b.send("ARM",msg)
-            s.ch = False
     s.update()
-    dis.show(img)
     if getattr(s, "over", False):
-        print("[MAIN] 所有任务完成，准备退出")
+        log.info("[MAIN] 所有任务完成，准备退出")
         break
+
 b.stop()
 ap.stop()
+v.stop()

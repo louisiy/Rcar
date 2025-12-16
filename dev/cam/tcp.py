@@ -5,6 +5,7 @@
 
 import socket
 import threading
+import log
 
 class TCPHANDLER:
     def __init__(self, ip="192.168.66.1", port=8080):
@@ -27,7 +28,7 @@ class TCPHANDLER:
         self.sock.bind((self.ip, self.port))
         self.sock.listen()
         self.run = True
-        print(f"[TCP] 监听 {self.ip}:{self.port}")
+        log.info(f"[TCP] 监听 {self.ip}:{self.port}")
 
         t = threading.Thread(target=self._accept, daemon=True)
         t.start()
@@ -42,12 +43,12 @@ class TCPHANDLER:
 
         self.clis.clear()
         self.ids.clear()
-        print("[TCP] 停止")
+        log.info("[TCP] 停止")
 
     def send(self, id_, msg: str):
         addr = self.ids.get(id_)
         if not addr:
-            print(f"[TCP] {id_} 不存在")
+            log.info(f"[TCP] {id_} 不存在")
             return 1
         cli = self.clis.get(addr)
         if cli:
@@ -58,7 +59,7 @@ class TCPHANDLER:
         while self.run:
             cli, addr = self.sock.accept()
             self.clis[addr] = cli
-            print(f"[TCP] 连接 {addr}")
+            log.info(f"[TCP] 连接 {addr}")
 
             t = threading.Thread(target=self._recv, args=(cli, addr), daemon=True)
             t.start()
@@ -74,7 +75,7 @@ class TCPHANDLER:
                 continue
 
             if ":" not in raw:
-                print(f"[TCP] 未知信息 {raw}")
+                log.info(f"[TCP] 未知信息 {raw}")
                 continue
 
             id_, msg = raw.split(":", 1)
@@ -84,7 +85,7 @@ class TCPHANDLER:
 
             if msg == "HELLO":
                 self.ids[id_] = addr
-                print(f"[TCP] 注册 id={id_}")
+                log.info(f"[TCP] 注册 id={id_}")
                 if self.cb and len(self.ids) == self.devices:
                     self.cb("TCP", "OK")
             else:
@@ -101,7 +102,7 @@ class TCPHANDLER:
                 break
         if dead:
             del self.ids[dead]
-            print(f"[TCP] id {dead} 注销")
+            log.info(f"[TCP] id {dead} 注销")
 
         cli.close()
-        print(f"[TCP] 断开连接 {addr}")
+        log.info(f"[TCP] 断开连接 {addr}")

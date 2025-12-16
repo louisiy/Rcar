@@ -5,6 +5,7 @@
 
 from maix import uart
 import threading
+import log
 
 class UARTHANDLER:
     def __init__(self, dev, baud=115200):
@@ -36,7 +37,7 @@ class UARTHANDLER:
                 continue
 
             if ":" not in raw:
-                print(f"[UART] 未知信息 {raw}")
+                log.info(f"[UART] 未知信息 {raw}")
                 continue
 
             id_, msg = raw.split(":", 1)

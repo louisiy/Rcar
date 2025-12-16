@@ -4,6 +4,7 @@
 
 
 import json
+import log
 
 class STATE:
     def __init__(self,path):
@@ -27,10 +28,10 @@ class STATE:
         self.state = 0
         self.task = ""
         self.over = False
-        print(f"[TASK] 加载任务序列，共{len(self.tasks)}条")
+        log.info(f"[TASK] 加载任务序列，共{len(self.tasks)}条")
 
     def done(self):
-        print(f"[TASK] {self.task}完成")
+        log.info(f"[TASK] {self.task}完成")
         self.state = 0
         self.task = ""
 
@@ -41,7 +42,7 @@ class STATE:
         self.task = self.tasks[self.index]
         self.index +=1
         self.state = 1
-        print(f"[TASK] {self.task}开始")
+        log.info(f"[TASK] {self.task}开始")
         return self.task
 
     def update(self):

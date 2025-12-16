@@ -4,6 +4,7 @@
 
 
 import time
+import log
 
 _cmd = {}
 
@@ -19,39 +20,39 @@ def dispatch(b, id_, msg):
     if fn:
         fn(b)
     else:
-        print(f"[CMD] 未处理消息 {key}")
+        log.info(f"[CMD] 未处理消息 {key}")
 
 #
 @reg("TASK:CHUSHIHUA")
 def initial(b):
-    print(f"[BUS] 等待设备连接")
+    log.info(f"[BUS] 等待设备连接")
     while not b.ready:
         time.sleep(0.5)
-    print(f"[BUS] 总线通讯就绪")
+    log.info(f"[BUS] 总线通讯就绪")
     b.s.done()
 
 @reg("CAR:HELLO")
 def car_ready(b):
-    print(f"[UART] 小车连接完毕")
+    log.info(f"[UART] 小车连接完毕")
 
 @reg("ARM:HELLO")
 def arm_ready(b):
     #单独测试机械臂
-    #b.ready = True
-    print(f"[UART] 机械臂连接完毕")
+    b.ready = True
+    log.info(f"[UART] 机械臂连接完毕")
 
 @reg("TCP:OK")
 def tcp_ready(b):
     b.ready = True
-    print(f"[TCP] 移动设备连接完毕")
+    log.info(f"[TCP] 移动设备连接完毕")
 
 #
 @reg("TASK:WAITGOGOGO")
 def waitgogogo(b):
-    print(f"[MAIN] 等待PS2手柄退出")
+    log.info(f"[MAIN] 等待PS2手柄退出")
     while not b.s.go:
         time.sleep(0.5)
-    print(f"[MAIN] PS2手柄退出，任务正式开始")
+    log.info(f"[MAIN] PS2手柄退出，任务正式开始")
     b.s.done()
 
 @reg("CAR:GOGOGO")
@@ -62,59 +63,59 @@ def gogogo(b):
 @reg("TASK:MOVE")
 def car_move(b):
     b.send("CAR","MOVE")
-    print(f"[CMD] 小车开始移动")
+    log.info(f"[CMD] 小车开始移动")
 
 @reg("CAR:MOVEOK")
 def car_move_ok(b):
-    print(f"[CMD] 小车移动完毕")
+    log.info(f"[CMD] 小车移动完毕")
     b.s.done()
 
 @reg("CAR:MOVEERR")
 def car_move_err(b):
-    print(f"[CMD] 小车远离轨迹，任务提前停止")
+    log.info(f"[CMD] 小车远离轨迹，任务提前停止")
     b.s.over = True
 
 #
 @reg("TASK:LEFT")
 def arm_left(b):
     b.send("ARM","LEFT")
-    print(f"[CMD] 机械臂左转90°")
+    log.info(f"[CMD] 机械臂左转90°")
 
 @reg("ARM:LEFT_OK")
 def arm_left_ok(b):
-    print(f"[CMD] 机械臂左转完毕")
+    log.info(f"[CMD] 机械臂左转完毕")
     b.s.done()
 
 #
 @reg("TASK:ATAG")
 def atag_pos(b):
     b.s.at = True
-    print(f"[CMD] ATAG开始对齐")
+    log.info(f"[CMD] ATAG开始对齐")
 
 @reg("ARM:REATAG")
 def atag_re_pos(b):
     b.s.at = True
-    print(f"[CMD] 再次确认ATAG位置")
+    log.info(f"[CMD] 再次确认ATAG位置")
 
 @reg("ARM:ATAGOK")
 def atag_pos_ok(b):
-    print(f"[CMD] ATAG对齐完毕")
+    log.info(f"[CMD] ATAG对齐完毕")
     b.s.done()
 
 #
 @reg("TASK:PHASEINTERFACE")
 def phase_interface(b):
     b.s.ch = True
-    print(f"[CMD] 寻找相界面")
+    log.info(f"[CMD] 寻找相界面")
 
 @reg("ARM:REPHASE")
 def rephase(b):
     b.s.ch = True
-    print(f"[CMD] 再次寻找相界面")
+    log.info(f"[CMD] 再次寻找相界面")
 
 @reg("ARM:PHASEOK")
 def phase_ok(b):
-    print(f"[CMD] 相界面寻找完毕")
+    log.info(f"[CMD] 相界面寻找完毕")
     b.s.done()
 
 # TODO:更新注射泵具体命令信号
@@ -122,26 +123,26 @@ def phase_ok(b):
 @reg("TASK:XIYE")
 def pump_xiye(b):
     b.send("PUMP","XI")
-    print(f"[CMD] 注射泵吸液")
+    log.info(f"[CMD] 注射泵吸液")
 
 @reg("PUMP:XOK")
 def pump_paiye(b):
     b.send("PUMP","PAI")
-    print(f"[CMD] 注射泵排液")
+    log.info(f"[CMD] 注射泵排液")
 
 #
 # @reg("TASK:XIQU")
 # def xiqu(b):
 #     b.send("PITE","DOWN")
-#     print(f"[CMD] 发送命令")
+#     log.info(f"[CMD] 发送命令")
 
 # @reg("PITE:DOK")
 # def dok(b):
 #     b.send("PITE","UP")
-#     print(f"[CMD] 发送命令")
+#     log.info(f"[CMD] 发送命令")
 
 # @reg("PITE:UOK")
 # def uok(b):
 #     b.send("PITE","OK")
-#     print(f"[CMD] 发送命令")
+#     log.info(f"[CMD] 发送命令")
 #     b.s.done()
