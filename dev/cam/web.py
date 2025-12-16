@@ -1,3 +1,8 @@
+'''
+    flask推流服务器
+'''
+
+
 import threading
 import time
 import logging

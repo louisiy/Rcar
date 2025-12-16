@@ -1,3 +1,8 @@
+'''
+    日志控制
+'''
+
+
 import logging, time
 
 _BUF_MAX = 500

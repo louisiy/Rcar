@@ -22,7 +22,7 @@ def dispatch(b, id_, msg):
     else:
         log.info(f"[CMD] 未处理消息 {key}")
 
-#
+# ------------------------------------ 初始化 ----------------------------------- #
 @reg("TASK:CHUSHIHUA")
 def initial(b):
     log.info(f"[BUS] 等待设备连接")
@@ -37,16 +37,14 @@ def car_ready(b):
 
 @reg("ARM:HELLO")
 def arm_ready(b):
-    #单独测试机械臂
-    b.ready = True
     log.info(f"[UART] 机械臂连接完毕")
 
 @reg("TCP:OK")
 def tcp_ready(b):
-    b.ready = True
+    b.tready = True
     log.info(f"[TCP] 移动设备连接完毕")
 
-#
+# --------------------------------- 等待PS2手柄退出 -------------------------------- #
 @reg("TASK:WAITGOGOGO")
 def waitgogogo(b):
     log.info(f"[MAIN] 等待PS2手柄退出")
@@ -59,7 +57,7 @@ def waitgogogo(b):
 def gogogo(b):
     b.s.go = True
 
-#
+# ----------------------------------- 小车移动 ----------------------------------- #
 @reg("TASK:MOVE")
 def car_move(b):
     b.send("CAR","MOVE")
@@ -75,7 +73,7 @@ def car_move_err(b):
     log.info(f"[CMD] 小车远离轨迹，任务提前停止")
     b.s.over = True
 
-#
+# ----------------------------------- 机械臂左转 ---------------------------------- #
 @reg("TASK:LEFT")
 def arm_left(b):
     b.send("ARM","LEFT")
@@ -86,7 +84,7 @@ def arm_left_ok(b):
     log.info(f"[CMD] 机械臂左转完毕")
     b.s.done()
 
-#
+# ---------------------------------- ATAG码对齐 --------------------------------- #
 @reg("TASK:ATAG")
 def atag_pos(b):
     b.s.at = True
@@ -102,7 +100,7 @@ def atag_pos_ok(b):
     log.info(f"[CMD] ATAG对齐完毕")
     b.s.done()
 
-#
+# ----------------------------------- 寻找相界面 ---------------------------------- #
 @reg("TASK:PHASEINTERFACE")
 def phase_interface(b):
     b.s.ch = True
@@ -119,7 +117,7 @@ def phase_ok(b):
     b.s.done()
 
 # TODO:更新注射泵具体命令信号
-#
+
 @reg("TASK:XIYE")
 def pump_xiye(b):
     b.send("PUMP","XI")

@@ -1,3 +1,8 @@
+'''
+    视频显示
+'''
+
+
 import threading
 import time
 
