@@ -7,7 +7,7 @@ import threading
 import time
 import logging
 
-from flask import Flask, Response, jsonify
+from flask import Flask, Response, jsonify, request
 import log
 
 _latest_jpeg = b""
@@ -85,7 +85,6 @@ loop();
 
 @app.get("/logs")
 def logs():
-    from flask import request
     since = request.args.get("since", "0")
     since = int(since) if since.isdigit() else 0
     items, latest = log.read_since(since)

@@ -65,5 +65,3 @@ class VIDEO:
             self.dis.show(img)
             jpg = img.to_jpeg().to_bytes()
             web.update(jpg)
-
-            #time.sleep(0.01)
