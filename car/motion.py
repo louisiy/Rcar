@@ -6,9 +6,9 @@ import setting as s
 import time
 
 class MOTION:
-    def __init__(self,pwms,flag):
+    def __init__(self,pwms,tcrt):
         self.pwms = pwms
-        self.flag = flag
+        self.tcrt = tcrt
 
     def is_any_true(self):
         return any([self.up, self.down, self.left, self.right])
@@ -85,17 +85,20 @@ class MOTION:
 
     def move_time_traj(self,speed,duration):
         start = time.time()
-        while (time.time()-start)> duration:
+        while (time.time()-start) < duration:
+            flag = self.tcrt.state()
             if flag == s.TCRT_ON:
                 self.straight(speed)
             elif flag == s.TCRT_OFF:
                 self.stop()
                 return 1
             elif flag == s.TCRT_LEFT:
-                self.turn(-speed/10)
+                self.turn(-speed*0.7)
             elif flag == s.TCRT_RIGHT:
-                self.turn(speed/10)
+                self.turn(speed*0.7)
+        self.stop()
         return 0
+
 
 if __name__ == "__main__":
     import setting
@@ -138,5 +141,5 @@ if __name__ == "__main__":
     mv = MOTION(pwms)
     mv.initial()
     while True:
-        car_test()
+        mv.move_time_traj(100,2)
     pwms.close()

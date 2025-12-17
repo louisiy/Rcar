@@ -61,14 +61,14 @@ def reg(name):
 def up(sock):
     print("[PITE] UP")
     set_angle(0)
-    time.sleep(2)
+    time.sleep(5)
     sock.send(b"PITE:UOK\n")
 
 @reg("DOWN")
 def down(sock):
     print("[PITE] DOWN")
     set_angle(110)
-    time.sleep(10)
+    time.sleep(5)
     sock.send(b"PITE:DOK\n")
 
 def main():

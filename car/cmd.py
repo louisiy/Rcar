@@ -20,9 +20,9 @@ def dispatch(uart,mv,raw):
 
 @reg("MOVE")
 def car_move(uart,mv):
-    i = mv.move_time_traj(150,4)
+    i = mv.move_time_traj(125,4)
     if i:
-        b.send("CAR:MOVEERR")
+        uart.send("CAR:MOVEERR")
     else:
-        b.send("CAR:MOVEOK")
+        uart.send("CAR:MOVEOK")
 

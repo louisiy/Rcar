@@ -135,6 +135,7 @@ class REMOTE:
             print("[RM] START和SELECT被同时按住。退出中...")
             self.run = False
             self.task_start = True
+            return
         self.joystick_mode()
         self.joystick_move()
         if not self.joy_active:

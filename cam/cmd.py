@@ -29,14 +29,17 @@ def initial(b):
     while not b.ready:
         time.sleep(0.5)
     log.info(f"[BUS] 总线通讯就绪")
+    time.sleep(5)
     b.s.done()
 
 @reg("CAR:HELLO")
 def car_ready(b):
+    #b.ready = True
     log.info(f"[UART] 小车连接完毕")
 
 @reg("ARM:HELLO")
 def arm_ready(b):
+    #b.ready = True
     log.info(f"[UART] 机械臂连接完毕")
 
 @reg("TCP:OK")
@@ -101,7 +104,7 @@ def atag_pos_ok(b):
     b.s.done()
 
 # ----------------------------------- 寻找相界面 ---------------------------------- #
-@reg("TASK:PHASEINTERFACE")
+@reg("TASK:COLOR")
 def phase_interface(b):
     b.s.ch = True
     log.info(f"[CMD] 寻找相界面")

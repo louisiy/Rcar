@@ -43,7 +43,7 @@ while not app.need_exit():
     if getattr(s, "over", False):
         log.info("[MAIN] 所有任务完成，准备退出")
         break
-
+time.sleep(3)
 b.stop()
 ap.stop()
 v.stop()

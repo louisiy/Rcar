@@ -61,16 +61,23 @@ function append(lines){
   box.scrollTop = box.scrollHeight;
 }
 
-async function tick(){
-  const r = await fetch('/logs?since=' + since);
-  const j = await r.json();
-  since = j.latest;
-  append(j.lines);
+async function loop(){
+  while (true){
+    try{
+      const r = await fetch('/logs?since=' + since);
+      const j = await r.json();
+      since = j.latest;
+      append(j.lines);
+    }catch(e){
+      console.log('log fetch failed:', e);
+    }
+    await new Promise(res => setTimeout(res, 300));
+  }
 }
 
-setInterval(tick, 300);
-tick();
+loop();
 </script>
+
 </body>
 </html>"""
     return html

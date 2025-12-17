@@ -8,7 +8,7 @@ from maix import image
 class COLORHANDLER:
     def __init__(
                  self,
-                 thresholds=[[0, 100, -20, -10, 60, 80]],
+                 thresholds=[[50, 60, -5, 5, 45, 60]],
                  interval=2
                 ):
         self.thresholds = thresholds
