@@ -21,7 +21,7 @@ DI4ML = b'\xCC\x00\x42\x80\x25\xDD\x90\x02'
 
 def send(msg):
     rlen = 8
-    timeout = 3
+    timeout = 5
 
     uart.write(msg)
     print(f"[UART] 发送 {msg}")
@@ -102,7 +102,7 @@ def reg(name):
 def xiye(sock):
     print("[PUMP] 吸取")
     err = aspirate()
-    time.sleep(1)
+    time.sleep(5)
     if err:
         sock.send(b"PUMP:EER")
         print("[TCP] 发送: PUMP:ERR")
@@ -114,7 +114,7 @@ def xiye(sock):
 def paiye(sock):
     print("[PUMP] 排液")
     err = dispense()
-    time.sleep(1)
+    time.sleep(5)
     if err:
         sock.send(b"PUMP:EER")
         print("[TCP] 发送: PUMP:ERR")

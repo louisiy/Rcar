@@ -41,7 +41,7 @@ def arm_ready(b):
 
 @reg("TCP:OK")
 def tcp_ready(b):
-    b.tready = True
+    b.ready = True
     log.info(f"[TCP] 移动设备连接完毕")
 
 # --------------------------------- 等待PS2手柄退出 -------------------------------- #
@@ -116,31 +116,34 @@ def phase_ok(b):
     log.info(f"[CMD] 相界面寻找完毕")
     b.s.done()
 
-# TODO:更新注射泵具体命令信号
+# ------------------------------------ 移液枪 ----------------------------------- #
+@reg("TASK:PITE")
+def xiqu(b):
+    b.send("PITE","DOWN")
+    log.info(f"[CMD] 移液枪按下")
 
-@reg("TASK:XIYE")
-def pump_xiye(b):
+@reg("PITE:DOK")
+def dok(b):
+    b.send("PITE","UP")
+    log.info(f"[CMD] 移液枪抬起")
+
+@reg("PITE:UOK")
+def uok(b):
+    log.info(f"[CMD] 移液枪操作完成")
+    b.s.done()
+
+# ------------------------------------ 注射泵 ----------------------------------- #
+@reg("TASK:PUMP")
+def pump(b):
     b.send("PUMP","XI")
     log.info(f"[CMD] 注射泵吸液")
 
 @reg("PUMP:XOK")
-def pump_paiye(b):
+def xok(b):
     b.send("PUMP","PAI")
     log.info(f"[CMD] 注射泵排液")
 
-#
-# @reg("TASK:XIQU")
-# def xiqu(b):
-#     b.send("PITE","DOWN")
-#     log.info(f"[CMD] 发送命令")
-
-# @reg("PITE:DOK")
-# def dok(b):
-#     b.send("PITE","UP")
-#     log.info(f"[CMD] 发送命令")
-
-# @reg("PITE:UOK")
-# def uok(b):
-#     b.send("PITE","OK")
-#     log.info(f"[CMD] 发送命令")
-#     b.s.done()
+@reg("PUMP:POK")
+def pok(b):
+    log.info(f"[CMD] 注射泵操作完成")
+    b.s.done()

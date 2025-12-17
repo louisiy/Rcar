@@ -60,7 +60,6 @@ def reg(name):
 @reg("UP")
 def up(sock):
     print("[PITE] UP")
-    # FIXME: 确认这是正确的角度
     set_angle(0)
     time.sleep(2)
     sock.send(b"PITE:UOK\n")
@@ -68,9 +67,8 @@ def up(sock):
 @reg("DOWN")
 def down(sock):
     print("[PITE] DOWN")
-    # FIXME: 确认这是正确的角度
-    set_angle(120)
-    time.sleep(2)
+    set_angle(110)
+    time.sleep(10)
     sock.send(b"PITE:DOK\n")
 
 def main():
@@ -79,8 +77,6 @@ def main():
 
     sock.send(b"PITE:HELLO\n")
     print("[TCP] 发送: PITE:HELLO")
-
-    # FIXME: 修改初始化角度到正确的角度
     set_angle(0)
 
     while True:
