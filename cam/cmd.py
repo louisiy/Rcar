@@ -1,5 +1,5 @@
 '''
-    命令处理
+    命令处理v1.0
 '''
 
 
@@ -60,18 +60,6 @@ def waitgogogo(b):
 def gogogo(b):
     b.s.go = True
 
-# ----------------------------------- 小车离线 ----------------------------------- #
-@reg("CAR:SHUTDOWN")
-def car_shutdown(b):
-    log.info(f"[CMD] 小车离线，异常，任务提前停止")
-    b.s.over = True
-
-# ----------------------------------- 任务完成 ----------------------------------- #
-@reg("TASK:OVER")
-def task_over(b):
-    b.send("CAR","OVER")
-    log.info(f"[MAIN] 归还PS2手柄控制")
-
 # ----------------------------------- 小车移动 ----------------------------------- #
 @reg("TASK:MOVE")
 def car_move(b):
@@ -115,8 +103,122 @@ def atag_pos_ok(b):
     log.info(f"[CMD] ATAG对齐完毕")
     b.s.done()
 
+# ----------------------------------- 抓取移液枪 ---------------------------------- #
+@reg("TASK:PITE_GRAB")
+def pite_grab(b):
+    b.send("ARM","PIPETTE_GRAB")
+    log.info(f"[CMD] 抓取移液枪")
+
+@reg("ARM:PIPETTE_GRAB_OK")
+def pite_grab_ok(b):
+    log.info(f"[CMD] 移液枪抓取完毕")
+    b.s.done()
+
+# ----------------------------------- 移液枪移动 ---------------------------------- #
+@reg("TASK:SOL_MV")
+def solution_move(b):
+    b.send("ARM","SOLUTION_MOVE")
+    log.info(f"[CMD] 移液枪对准烧杯")
+
+@reg("ARM:SOLUTION_MOVE_OK")
+def solution_move_ok(b):
+    log.info(f"[CMD] 移液枪对准完毕")
+    b.s.done()
+
+# ------------------------------------ 移液枪操作 ----------------------------------- #
+@reg("TASK:PITE")
+def xiqu(b):
+    b.send("PITE","DOWN")
+    log.info(f"[CMD] 移液枪按下")
+
+@reg("PITE:DOK")
+def dok(b):
+    b.send("ARM","SOLUTION_DOWN")
+    log.info(f"[CMD] 移液枪放下")
+
+@reg("ARM:SOLUTION_DOWN_OK")
+def solution_down_ok(b):
+    b.send("PITE","UP")
+    log.info(f"[CMD] 移液枪松开")
+
+@reg("PITE:UOK")
+def uok(b):
+    b.send("ARM","SOLUTION_UP")
+    log.info(f"[CMD] 移液枪抬起")
+
+@reg("ARM:SOLUTION_UP_OK")
+def solution_up_ok(b):
+    log.info(f"[CMD] 吸液完毕")
+    b.s.done()
+
+# ------------------------------------ 加液 ------------------------------------ #
+@reg("TASK:ADD")
+def task_add(b):
+    b.send("ARM","ADD_MOVEDOWN")
+    log.info(f"[CMD] 加液开始")
+
+@reg("ARM:ADD_MOVEDOWN_OK")
+def add_dok(b):
+    b.send("PITE","DOWN")
+    log.info(f"[CMD] 移液枪按下")
+
+@reg("PITE:DOK")
+def add_up(b):
+    b.send("ARM","ADD_UP")
+    log.info(f"[CMD] 移液枪抬起")
+
+@reg("ARM:ADD_UP_OK")
+def add_up_ok(b):
+    log.info(f"[CMD] 加液完成")
+    b.s.done()
+
+# ----------------------------------- 放回移液枪 ---------------------------------- #
+@reg("TASK:FANGHUI")
+def fanghui(b):
+    b.send("ARM","PIPETTE_DROP")
+    log.info(f"[CMD] 放回移液枪")
+
+@reg("ARM:PIPETTE_DROP_OK")
+def fanghui_ok(b):
+    log.info(f"[CMD] 放回完毕")
+    b.s.done()
+
+# ----------------------------------- 夹起容器 ----------------------------------- #
+@reg("TASK:JIAQI")
+def jiaqi(b):
+    b.send("ARM","CONTAINER_GRAB")
+    log.info(f"[CMD] 夹起容器")
+
+@reg("ARM:CONTAINER_GRAB_OK")
+def jiaqi_ok(b):
+    log.info(f"[CMD] 夹起完毕")
+    b.s.done()
+
+# ----------------------------------- 小车移动 ----------------------------------- #
+
+# ----------------------------------- 机械臂左转 ---------------------------------- #
+
+# ----------------------------------- ATAG ----------------------------------- #
+
+# ------------------------------------ 放容器 ----------------------------------- #
+@reg("TASK:FANGXIA")
+def fangxia(b):
+    b.send("ARM","EXTRACTION_DROP")
+    log.info(f"[CMD] 容器放下")
+
+
+@reg("ARM:EXTRACTION_DROP_OK")
+def fangxia_ok(b):
+    log.info(f"[CMD] 放下完毕")
+    b.s.done()
+
 # ----------------------------------- 寻找相界面 ---------------------------------- #
 @reg("TASK:COLOR")
+def color_move(b):
+    b.send("ARM","INTERFACE_MOVE")
+    log.info(f"[CMD] 移动到相界面附近")
+
+@reg("ARM:INTERFACE_MOVE_OK")
 def phase_interface(b):
     b.s.ch = True
     log.info(f"[CMD] 寻找相界面")
@@ -131,20 +233,26 @@ def phase_ok(b):
     log.info(f"[CMD] 相界面寻找完毕")
     b.s.done()
 
-# ------------------------------------ 移液枪 ----------------------------------- #
-@reg("TASK:PITE")
-def xiqu(b):
-    b.send("PITE","DOWN")
-    log.info(f"[CMD] 移液枪按下")
+# ----------------------------------- 夹取针头 ----------------------------------- #
+@reg("TASK:ZHUAZHEN")
+def zhuazhen(b):
+    b.send("ARM","NEEDLE_GRAB")
+    log.info(f"[CMD] 抓取针头")
 
-@reg("PITE:DOK")
-def dok(b):
-    b.send("PITE","UP")
-    log.info(f"[CMD] 移液枪抬起")
+@reg("ARM:NEEDLE_GRAB_OK")
+def zhuazhen_ok(b):
+    log.info(f"[CMD] 抓取针头完毕")
+    b.s.done()
 
-@reg("PITE:UOK")
-def uok(b):
-    log.info(f"[CMD] 移液枪操作完成")
+# ----------------------------------- 移动针头 ----------------------------------- #
+@reg("TASK:YIZHEN")
+def yizhen(b):
+    b.send("ARM","PUMP_MOVE")
+    log.info(f"[CMD] 移动针头")
+
+@reg("ARM:PUMP_MOVE_OK")
+def yizhen_ok(b):
+    log.info(f"[CMD] 移动针头完毕")
     b.s.done()
 
 # ------------------------------------ 注射泵 ----------------------------------- #
@@ -154,11 +262,37 @@ def pump(b):
     log.info(f"[CMD] 注射泵吸液")
 
 @reg("PUMP:XOK")
-def xok(b):
-    b.send("PUMP","PAI")
-    log.info(f"[CMD] 注射泵排液")
+def taizhen(b):
+    b.send("ARM","PUMP_UP")
+    log.info(f"[CMD] 拿起针头")
 
-@reg("PUMP:POK")
-def pok(b):
-    log.info(f"[CMD] 注射泵操作完成")
+@reg("ARM:PUMP_UP_OK")
+def fangzhen(b):
+    b.send("ARM","DROPNEEDLE")
+    log.info(f"[CMD] 放下针头")
+
+@reg("ARM:DROPNEEDLE_OK")
+def fanzheng_ok(b):
+    log.info(f"[CMD] 放针完毕")
     b.s.done()
+
+# def xok(b):
+#     b.send("PUMP","PAI")
+#     log.info(f"[CMD] 注射泵排液")
+
+# @reg("PUMP:POK")
+# def pok(b):
+#     log.info(f"[CMD] 注射泵操作完成")
+#     b.s.done()
+
+# ----------------------------------- 任务完成 ----------------------------------- #
+@reg("TASK:OVER")
+def task_over(b):
+    b.send("CAR","OVER")
+    log.info(f"[MAIN] 归还PS2手柄控制")
+
+# ----------------------------------- 小车离线 ----------------------------------- #
+@reg("CAR:SHUTDOWN")
+def car_shutdown(b):
+    log.info(f"[CMD] 小车离线，异常，任务提前停止")
+    b.s.over = True
