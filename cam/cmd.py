@@ -60,6 +60,18 @@ def waitgogogo(b):
 def gogogo(b):
     b.s.go = True
 
+# ----------------------------------- 小车离线 ----------------------------------- #
+@reg("CAR:SHUTDOWN")
+def car_shutdown(b):
+    log.info(f"[CMD] 小车离线，异常，任务提前停止")
+    b.s.over = True
+
+# ----------------------------------- 任务完成 ----------------------------------- #
+@reg("TASK:OVER")
+def task_over(b):
+    b.send("CAR","OVER")
+    log.info(f"[MAIN] 归还PS2手柄控制")
+
 # ----------------------------------- 小车移动 ----------------------------------- #
 @reg("TASK:MOVE")
 def car_move(b):
