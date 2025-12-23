@@ -11,18 +11,24 @@ def reg(name: str):
         return fn
     return deco
 
-def dispatch(uart,mv,raw):
+def dispatch(uart,mv, rm,raw):
     fn = _cmd.get(raw)
     if fn:
-        fn(uart,mv)
+        fn(uart,mv,rm)
     else:
         print(f"[CAR] 未知命令: {raw}")
 
 @reg("MOVE")
-def car_move(uart,mv):
+def car_move(uart,mv,rm):
+    print(f"[CAR] 前进命令")
     i = mv.move_time_traj(125,4)
     if i:
         uart.send("CAR:MOVEERR")
     else:
         uart.send("CAR:MOVEOK")
 
+@reg("OVER")
+def over(uart,mv,rm):
+    print("[RM] PS2手柄重新获得控制权")
+    rm.initial()
+    uart.send("CAR:BYE")

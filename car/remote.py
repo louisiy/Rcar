@@ -20,10 +20,11 @@ class REMOTE:
         self.joy_active = 0
         self.joy_mode = 0
         self.run = False
-        self.task_start = False
+        self.task = False
+        self.shut = False
 
     def joystick_mode(self):
-        if self.ps2.is_held('L3') and self.ps2.is_held('R3'):
+        if self.ps2.is_held('L3') and self.ps2.is_pressed('R3'):
             self.joy_mode = 1 - self.joy_mode
             print(self.joy_mode)
             print("[RM] 手柄模式切换")
@@ -131,10 +132,15 @@ class REMOTE:
             self.mv.stop()
 
     def handler(self):
-        if self.ps2.is_held('START') and self.ps2.is_held('SELECT'):
+        if self.ps2.is_held('START') and self.ps2.is_pressed('SELECT'):
             print("[RM] START和SELECT被同时按住。退出中...")
             self.run = False
-            self.task_start = True
+            self.task = True
+            return
+        if self.ps2.is_held('TRIANGLE') and self.ps2.is_pressed('CIRCLE'):
+            print("[RM] TRIANGLE和CIRCLE被同时按住。关机中...")
+            self.run = False
+            self.shut = True
             return
         self.joystick_mode()
         self.joystick_move()
@@ -148,6 +154,8 @@ class REMOTE:
             time.sleep_ms(s.READ_DELAY_MS)
 
     def initial(self):
+        if self.run:
+            return 0
         error = self.ps2.config()
         if error:
             print("[RM] 无法配置PS2")

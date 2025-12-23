@@ -39,12 +39,12 @@ def car_ready(b):
 
 @reg("ARM:HELLO")
 def arm_ready(b):
-    #b.ready = True
+    b.ready = True
     log.info(f"[UART] 机械臂连接完毕")
 
 @reg("TCP:OK")
 def tcp_ready(b):
-    b.ready = True
+    #b.ready = True
     log.info(f"[TCP] 移动设备连接完毕")
 
 # --------------------------------- 等待PS2手柄退出 -------------------------------- #

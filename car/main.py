@@ -24,15 +24,18 @@ def main():
     rm.initial()
 
     uart = UART2()
-    uart.send("CAR:HELLO\n")
+    uart.send("CAR:HELLO")
     uart.start()
-    uart.cb = lambda raw: cmd.dispatch(uart, mv, raw)
+    uart.cb = lambda raw: cmd.dispatch(uart, mv, rm, raw)
 
     while True:
-        if getattr(rm, "task_start", True):
+        if getattr(rm, "task", False):
             print("[CAR] 结束手柄控制，任务正式开始")
             uart.send("CAR:GOGOGO")
-            rm.task_start = False
+            rm.task = False
+        if getattr(rm, "shut", False):
+            uart.send("CAR:SHUTDOWN")
+            break
         time.sleep(0.02)
     pwms.close()
     uart.stop()
