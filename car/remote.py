@@ -132,12 +132,12 @@ class REMOTE:
             self.mv.stop()
 
     def handler(self):
-        if self.ps2.is_held('START') and self.ps2.is_pressed('SELECT'):
+        if self.ps2.is_held('START') and self.ps2.is_held('SELECT'):
             print("[RM] START和SELECT被同时按住。退出中...")
             self.run = False
             self.task = True
             return
-        if self.ps2.is_held('TRIANGLE') and self.ps2.is_pressed('CIRCLE'):
+        if self.ps2.is_held('TRIANGLE') and self.ps2.is_held('CIRCLE'):
             print("[RM] TRIANGLE和CIRCLE被同时按住。关机中...")
             self.run = False
             self.shut = True

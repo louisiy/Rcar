@@ -32,20 +32,24 @@ def initial(b):
     time.sleep(5)
     b.s.done()
 
-@reg("CAR:HELLO")
-def car_ready(b):
-    #b.ready = True
-    log.info(f"[UART] 小车连接完毕")
-
-@reg("ARM:HELLO")
-def arm_ready(b):
-    b.ready = True
-    log.info(f"[UART] 机械臂连接完毕")
-
 @reg("TCP:OK")
 def tcp_ready(b):
     #b.ready = True
     log.info(f"[TCP] 移动设备连接完毕")
+    time.sleep(0.5)
+    b.send("ARM","HELLO")
+
+@reg("ARM:HELLO")
+def arm_ready(b):
+    #b.ready = True
+    log.info(f"[UART] 机械臂连接完毕")
+    time.sleep(0.5)
+    b.send("CAR","HELLO")
+
+@reg("CAR:HELLO")
+def car_ready(b):
+    b.ready = True
+    log.info(f"[UART] 小车连接完毕")
 
 # --------------------------------- 等待PS2手柄退出 -------------------------------- #
 @reg("TASK:WAITGOGOGO")
@@ -128,20 +132,20 @@ def solution_move_ok(b):
 # ------------------------------------ 移液枪操作 ----------------------------------- #
 @reg("TASK:PITE")
 def xiqu(b):
-    b.send("PITE","DOWN")
+    b.send("PITE","IDOWN")
     log.info(f"[CMD] 移液枪按下")
 
-@reg("PITE:DOK")
+@reg("PITE:IDOK")
 def dok(b):
     b.send("ARM","SOLUTION_DOWN")
     log.info(f"[CMD] 移液枪放下")
 
 @reg("ARM:SOLUTION_DOWN_OK")
 def solution_down_ok(b):
-    b.send("PITE","UP")
+    b.send("PITE","IUP")
     log.info(f"[CMD] 移液枪松开")
 
-@reg("PITE:UOK")
+@reg("PITE:IUOK")
 def uok(b):
     b.send("ARM","SOLUTION_UP")
     log.info(f"[CMD] 移液枪抬起")
@@ -159,16 +163,21 @@ def task_add(b):
 
 @reg("ARM:ADD_MOVEDOWN_OK")
 def add_dok(b):
-    b.send("PITE","DOWN")
+    b.send("PITE","FDOWN")
     log.info(f"[CMD] 移液枪按下")
 
-@reg("PITE:DOK")
+@reg("PITE:FDOK")
 def add_up(b):
     b.send("ARM","ADD_UP")
     log.info(f"[CMD] 移液枪抬起")
 
 @reg("ARM:ADD_UP_OK")
 def add_up_ok(b):
+    b.send("PITE","FUP")
+    log.info(f"[CMD] 移液枪松开")
+
+@reg("PITE:FUOK")
+def fuok(b):
     log.info(f"[CMD] 加液完成")
     b.s.done()
 
@@ -267,6 +276,11 @@ def taizhen(b):
     log.info(f"[CMD] 拿起针头")
 
 @reg("ARM:PUMP_UP_OK")
+def taizhen_ok(b):
+    log.info(f"[CMD] 拿针完毕")
+    b.s.done()
+
+@reg("TASK:FANGZHEN")
 def fangzhen(b):
     b.send("ARM","DROPNEEDLE")
     log.info(f"[CMD] 放下针头")
@@ -290,6 +304,10 @@ def fanzheng_ok(b):
 def task_over(b):
     b.send("CAR","OVER")
     log.info(f"[MAIN] 归还PS2手柄控制")
+
+@reg("CAR:BYE")
+def car_byr(b):
+    b.s.done()
 
 # ----------------------------------- 小车离线 ----------------------------------- #
 @reg("CAR:SHUTDOWN")

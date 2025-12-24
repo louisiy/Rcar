@@ -24,7 +24,7 @@ def main():
     rm.initial()
 
     uart = UART2()
-    uart.send("CAR:HELLO")
+    uart.send("CAR:NIHAO")
     uart.start()
     uart.cb = lambda raw: cmd.dispatch(uart, mv, rm, raw)
 

@@ -57,19 +57,34 @@ def reg(name):
         return fn
     return deco
 
-@reg("UP")
+@reg("IUP")
 def up(sock):
-    print("[PITE] UP")
+    print("[PITE] IUP")
     set_angle(0)
     time.sleep(5)
-    sock.send(b"PITE:UOK\n")
+    sock.send(b"PITE:IUOK\n")
 
-@reg("DOWN")
+@reg("IDOWN")
 def down(sock):
-    print("[PITE] DOWN")
+    print("[PITE] IDOWN")
     set_angle(110)
     time.sleep(5)
-    sock.send(b"PITE:DOK\n")
+    sock.send(b"PITE:IDOK\n")
+
+
+@reg("FUP")
+def up(sock):
+    print("[PITE] FUP")
+    set_angle(0)
+    time.sleep(5)
+    sock.send(b"PITE:FUOK\n")
+
+@reg("FDOWN")
+def down(sock):
+    print("[PITE] FDOWN")
+    set_angle(110)
+    time.sleep(5)
+    sock.send(b"PITE:FDOK\n")
 
 def main():
     wlan = wifi_connect()
