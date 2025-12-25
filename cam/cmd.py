@@ -34,10 +34,10 @@ def initial(b):
 
 @reg("TCP:OK")
 def tcp_ready(b):
-    #b.ready = True
+    b.ready = True
     log.info(f"[TCP] 移动设备连接完毕")
     time.sleep(0.5)
-    b.send("ARM","HELLO")
+    #b.send("ARM","HELLO")
 
 @reg("ARM:HELLO")
 def arm_ready(b):
