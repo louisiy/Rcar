@@ -87,12 +87,12 @@ def down(sock):
     sock.send(b"PITE:FDOK\n")
 
 def main():
+    set_angle(0)
     wlan = wifi_connect()
     sock = server_connect()
 
     sock.send(b"PITE:HELLO\n")
     print("[TCP] 发送: PITE:HELLO")
-    set_angle(0)
 
     while True:
         data = sock.recv(128)

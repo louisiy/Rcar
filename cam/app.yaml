@@ -1,0 +1,21 @@
+id: cam
+name: CAM
+version: 1.0.0
+author: YZH
+icon: ''
+desc: cam
+files:
+  - atag.py
+  - bus.py
+  - cmd.py
+  - color.py
+  - full_task.json.bk
+  - log.py
+  - main.py
+  - state.py
+  - task.json
+  - tcp.py
+  - uart.py
+  - video.py
+  - web.py
+  - wifi.py
