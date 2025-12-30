@@ -271,33 +271,37 @@ def pump(b):
     log.info(f"[CMD] 注射泵吸液")
 
 @reg("PUMP:XOK")
-def taizhen(b):
+def pump_xok(b):
+    log.info(f"[CMD] 吸液完毕")
+    b.s.done()
+
+@reg("TASK:PUMPOUT")
+def out(b):
+     b.send("PUMP","PAI")
+     log.info(f"[CMD] 注射泵排液")
+
+@reg("PUMP:POK")
+def pok(b):
+    log.info(f"[CMD] 排液完毕")
+    b.s.done()
+
+# ------------------------------------ 放回针 ----------------------------------- #
+@reg("TASK:FANGZHEN")
+def fangzhen(b):
     b.send("ARM","PUMP_UP")
-    log.info(f"[CMD] 拿起针头")
+    log.info(f"[CMD] 升起针头")
 
 @reg("ARM:PUMP_UP_OK")
 def taizhen_ok(b):
-    log.info(f"[CMD] 拿针完毕")
-    b.s.done()
-
-@reg("TASK:FANGZHEN")
-def fangzhen(b):
+    #b.s.done()
     b.send("ARM","DROPNEEDLE")
-    log.info(f"[CMD] 放下针头")
+    log.info(f"[CMD] 放回针头")
 
 @reg("ARM:DROPNEEDLE_OK")
 def fanzheng_ok(b):
     log.info(f"[CMD] 放针完毕")
     b.s.done()
 
-# def xok(b):
-#     b.send("PUMP","PAI")
-#     log.info(f"[CMD] 注射泵排液")
-
-# @reg("PUMP:POK")
-# def pok(b):
-#     log.info(f"[CMD] 注射泵操作完成")
-#     b.s.done()
 
 # ----------------------------------- 任务完成 ----------------------------------- #
 @reg("TASK:OVER")

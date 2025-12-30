@@ -123,12 +123,11 @@ def paiye(sock):
         print("[TCP] 发送: PUMP:POK")
 
 def main():
+    init()
     wlan = wifi_connect()
     sock = server_connect()
-
     sock.send(b"PUMP:HELLO\n")
     print("[TCP] 发送: PUMP:HELLO")
-    init()
 
     while True:
         data = sock.recv(128)

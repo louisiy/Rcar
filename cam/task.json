@@ -1,5 +1,5 @@
 [
-	"CHUSHIHUA",
+    "CHUSHIHUA",
     "LEFT",
     "ATAG",
     "PITE_GRAB",
@@ -11,5 +11,12 @@
     "MOVE",
     "LEFT",
     "ATAG",
-    "FANGXIA"
+    "FANGXIA",
+    "COLOR",
+    "ZHUAZHEN",
+    "YIZHEN",
+    "PUMP",
+    "FANGZHEN",
+    "PUMPOUT",
+    "LEFT"
 ]

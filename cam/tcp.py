@@ -20,7 +20,7 @@ class TCPHANDLER:
 
         self.cb = None             # 回调：cb(id, msg)
 
-        self.devices = 1
+        self.devices = 2
 
     def start(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
